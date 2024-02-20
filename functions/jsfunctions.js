@@ -8,9 +8,6 @@ function processing()
 return '<img src="../images/aj_loader.gif" width="43" height="11" />';	
 }
 
-
-
-
 var rotateMsg = true;
 function MsgStatus() 
 {
@@ -37,6 +34,44 @@ function checkemail(a)
   return (!r1.test(a) && r2.test(a));
 }
 
+
+
+function gstin() {
+	var gstinPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z0-9A-Z]{1}[0-9A-Z]{1}$/;
+  
+	if (gstinPattern.test(gstin)) {
+	  var stateCode = gstin.substring(0, 2);
+	  var pan = gstin.substring(2, 12);
+	  var numRegistrations = gstin.charAt(12);
+	  var defaultChar = gstin.charAt(13);
+	  var checksumDigit = gstin.charAt(14);
+  
+	  if (isValidStateCode(stateCode)) {
+		if (isValidPAN(pan)) {
+		  if (numRegistrations !== '0') {
+			if (defaultChar === 'Z') {
+			  if (isValidChecksum(gstin)) {
+				return true; 
+			  } else {
+				return "Invalid checksum digit";
+			  }
+			} else {
+			  return "Invalid default character";
+			}
+		  } else {
+			return "Number of registrations cannot be 0";
+		  }
+		} else {
+		  return "Invalid PAN";
+		}
+	  } else {
+		return "Invalid state code";
+	  }
+	} else {
+	  return "Invalid GSTIN format";
+	}
+  }
+  
 function chkNumeric(objName)
 {
 	var checkOK = "0123456789";

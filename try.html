@@ -1,22 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Input Form</title>
-</head>
-<body>
-    <form action="process_form.php" method="post">
-        <label for="time">Time:</label>
-        <input type="time" id="time" name="time" required>
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-        <label for="ampm">AM/PM:</label>
-        <select id="ampm" name="ampm" required>
-            <option value="AM">AM</option>
-            <option value="PM">PM</option>
-        </select>
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
-        <button type="submit">Submit</button>
-    </form>
-</body>
-</html>
+// Include library files 
+require 'PHPMailer/Exception.php';
+require 'PHPMailer/PHPMailer.php';
+require 'PHPMailer/SMTP.php';
+
+include('functions/phpfunctions.php');
+
+
+        $leadid = $_POST['id'];
+        $gstin = $_POST['gstin'];
+        $remarks = $_POST['remarks'];
+
+        $query = "SELECT * FROM leads WHERE id = '$leadid'";
+        $fetch = runmysqlqueryfetch($query);
+        $dealerid = $fetch['dealerid'];
+
+        $dealerQuery = "SELECT `dlrname`, `dlrcell`, `dlremail` FROM dealers WHERE id = '$dealerid'";
+        $dealerResult = runmysqlqueryfetch($dealerQuery);
+
+        $quotedate = date("Y-m-d");
+
+        $year = date("Y");
+        $quoteNumberQuery = "SELECT MAX(id) as max_id FROM lms_quote";
+        $quoteNumberResult = runmysqlqueryfetch($quoteNumberQuery);
+        $autoIncrementValue = $quoteNumberResult['max_id'] + 1;
+        $quotenumber = "RSL" . $year . "Q" . str_pad($autoIncrementValue, 2, "0", STR_PAD_LEFT);
+
+        $validdate = date("Y-m-d", strtotime("+14 days"));
+
+        $company = $fetch['company'];
+        $emailid = $fetch['emailid'];
+        $customername = $fetch['name'];
+        $cell = $fetch['cell'];
+        $extvname = $dealerResult['dlrname'];
+        $extvcell = $dealerResult['dlrcell'];
+        $extvemailid = $dealerResult['dlremail'];
+
+        // Convert arrays to JSON strings
+        $products = array();
+        foreach ($_POST['productnames'] as $key => $value) {
+            $product = array(
+                'name' => $_POST['productnames'][$key],
+                'purchasetype' => $_POST['purchasetypes'][$key],
+                'usagetype' => $_POST['usagetypes'][$key],
+                'amount' => $_POST['amounts'][$key]
+            );
+            $products[] = $product;
+        }
+
+        // Load HTML template
+        $template = file_get_contents("send_quote.html");
+
+        // Replace placeholders with form data
+        $template = str_replace("##quotedate##", $quotedate, $template);
+        $template = str_replace("##quotenumber##", $quotenumber, $template);
+        $template = str_replace("##validdate##", $validdate, $template);
+        $template = str_replace("##gstin##", $gstin, $template);
+        $template = str_replace("##company##", $company, $template);
+        $template = str_replace("##customername##", $customername, $template);
+        $template = str_replace("##emailid##", $emailid, $template);
+        $template = str_replace("##cell##", $cell, $template);
+        $template = str_replace("##extvname##", $extvname, $template);
+        $template = str_replace("##extvcell##", $extvcell, $template);
+        $template = str_replace("##extvemailid##", $extvemailid, $template);
+
+        // Prepare products table
+        $productRows = "";
+        foreach ($products as $product) {
+            $productRows .= "<tr>
+                                <td>{$product['name']}</td>
+                                <td>{$product['purchasetype']}</td>
+                                <td>{$product['usagetype']}</td>
+                                <td>{$product['amount']}</td>
+                            </tr>";
+        }
+
+        $template = str_replace("##product_rows##", $productRows, $template);
+
+
+
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'panchalpavan111@gmail.com'; // Your Gmail address
+            $mail->Password = 'ukzygvcaoweqvcgz'; // Your Gmail app password
+            // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPSecure = 'ssl';   
+            $mail->Port = 465;
+
+            //Recipients
+            $mail->setFrom('panchalpavan111@gmail.com', 'Pavankumar');
+            $mail->addAddress('panchalpavan800@gmail.com','kumar'); // Receiver's email address
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Quote Request';
+            $mail->Body = $template;
+
+            $mail->send();
+            echo "Quote sent successfully.";
+        } catch (Exception $e) {
+            echo "Failed to send quote. Error: {$mail->ErrorInfo}";
+        }
+
+?>

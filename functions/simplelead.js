@@ -3,15 +3,15 @@
 function checkForMatchingRows() {
   var xmlhttp = new XMLHttpRequest();
 
-  xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-          if (xmlhttp.status === 200) {
-              if (xmlhttp.responseText.trim() !== 'No rows found') {
-                  // If a match is found, display an alert
-                  alert(xmlhttp.responseText);
-              }
-          }
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+      if (xmlhttp.status === 200) {
+        if (xmlhttp.responseText.trim() !== "No rows found") {
+          // If a match is found, display an alert
+          alert(xmlhttp.responseText);
+        }
       }
+    }
   };
 
   xmlhttp.open("GET", "../ind.php", true);
@@ -20,6 +20,49 @@ function checkForMatchingRows() {
 
 // Call the function every 20 seconds (adjust as needed)
 setInterval(checkForMatchingRows, 20000); // 20 seconds
+$(document).ready(function () {
+  // Function to add a new product row
+  function addProductRow() {
+    var rowCount = $("#adddescriptionrows tr").length;
+    var newRow =
+      "<tr>" +
+      '<td width="5%"><div align="left"><strong>' +
+      (rowCount + 1) +
+      "</strong></div></td>" +
+      '<td width="11%"><div align="center"><input name="productName[]" type="text" class="swifttext type_enter focus_redclass" style="width:115px" maxlength="70" autocomplete="off"/></div></td>' +
+      '<td width="16%"><div align="center"><select name="purchaseType[]" style="width:110px" class="swiftselect-mandatory type_enter focus_redclass"><option value="" selected="selected">--Select--</option><option value="New">New</option><option value="Updation">Updation</option></select></div></td>' +
+      '<td width="18%"><div align="center"><select name="usageType[]" style="width:110px" class="swiftselect-mandatory type_enter focus_redclass"><option value="" selected="selected">--Select--</option><option value="Single User">Single User</option><option value="Multi User">Multi User</option></select></div></td>' +
+      '<td width="15%"><div align="center"><input name="amount[]" type="text" class="swifttext type_enter focus_redclass" style="width:100px" maxlength="10" autocomplete="off"/></div></td>' +
+      '<td width="8%"><font color="#FF0000"><strong><a onclick="removeProductRow(this)" style="cursor:pointer; width:10px; ">X</a></strong></font><input type="hidden" name="contactslno[]" /></td>' +
+      "</tr>";
+    $("#adddescriptionrows").append(newRow);
+  }
+
+  // Function to remove the product row
+  function removeProductRow(anchor) {
+    var rowCount = $("#adddescriptionrows tr").length;
+    if (rowCount > 1) {
+      $(anchor).closest("tr").remove();
+      // Update the serial numbers after removing a row
+      $("#adddescriptionrows tr").each(function (index) {
+        $(this)
+          .find("td:first")
+          .find("strong")
+          .text(index + 1);
+      });
+    }
+  }
+
+  // Event handler for adding more product rows
+  $("#adddescriptionrowdiv a").click(function () {
+    addProductRow();
+  });
+
+  // Event handler for removing product rows
+  $("#adddescriptionrows").on("click", "a", function () {
+    removeProductRow(this);
+  });
+});
 
 var myValue = "";
 var fieldlength = "";
@@ -77,6 +120,7 @@ function getmynumber() {
   });
 }
 
+
 function insertAtCursor(myField) {
   //IE support
   if ($("#mynumber").is(":checked") == true) {
@@ -117,6 +161,7 @@ function insertAtCursor(myField) {
     }
   }
 }
+
 
 function griddata(startlimit) {
   $("#gridprocess").html(processing());
@@ -164,6 +209,8 @@ function griddata(startlimit) {
     },
   });
 }
+
+
 
 function filtering(command) {
   var form = $("#filterform");
@@ -378,7 +425,16 @@ function filtering(command) {
   }
 }
 
+function resetForm() {
+  var form = document.getElementById("quoteForm");
+  form.reset();
+  $("#adddescriptionrows tr").not(':first').remove(); // Remove all rows except the first one
+}
+
+
+
 function gridtoform(id) {
+  resetForm();
   sendsms("reset");
   resetproductchange();
   $("#showeditimage").hide();
@@ -544,10 +600,19 @@ function gridtoform(id) {
     },
   });
 }
+
+
+
+
+
+
 function formsubmited(command) {
   $("#tabgroupgridh2").trigger("click");
   window.setTimeout(mydemovalue, 3000);
 }
+
+
+
 function mydemovalue() {
   //var td = $("td:contains(Demo Given)");
   if (
@@ -697,12 +762,11 @@ function formsubmit(command) {
   }
 }
 
-
 function addfollowup() {
   var form_recid = $("#form_recid");
   var form_leadremarks = $("#form_leadremarks");
   var followupdate = $("#followupdate");
-  var followuptime =$("#followuptime");
+  var followuptime = $("#followuptime");
   var followupmessage = $("#followupmessage");
 
   if (!form_recid.val()) {
@@ -737,7 +801,6 @@ function addfollowup() {
     "&followuptime=" +
     encodeURIComponent($("#DPC_followuptime").val()) +
     "&dummy=" +
-
     Math.floor(Math.random() * 10230000000);
   queryString = "../ajax/simplelead.php";
   ajaxobjext61 = $.ajax({
@@ -764,9 +827,6 @@ function addfollowup() {
     },
   });
 }
-
-
-
 
 function showfollowups(leadid) {
   //var form_recid = $("#form_recid");
@@ -1101,6 +1161,863 @@ function getmorerecords(startlimit, slnocount, showtype, type) {
         $("#gridprocessf").html(scripterror1());
       },
     });
+  }
+}
+
+function send_quote() {
+  var contactperson = $("#contactperson").val();
+  var address = $("#address").val();
+  var stdcode = $("#stdcode").val();
+  var phone = $("#phone").val();
+  var cell = $("#cell").val();
+  var emailid = $("#emailid").val();
+  var gstin = $("#gstin").val();
+  var remarks = $("#remarks").val();
+  var products = [];
+
+  $("input[name='productName[]']").each(function (index) {
+    var productName = $(this).val();
+    var purchaseType = $("select[name='purchaseType[]']").eq(index).val();
+    var usageType = $("select[name='usageType[]']").eq(index).val();
+    var amount = $("input[name='amount[]']").eq(index).val();
+
+    products.push({
+      productName: productName,
+      purchaseType: purchaseType,
+      usageType: usageType,
+      amount: amount,
+    });
+  });
+
+  var id = $("#hiddenid").val();
+
+  var passdata =
+    "id=" +
+    encodeURIComponent(id) +
+    "&contactperson=" +
+    encodeURIComponent(contactperson) +
+    "&address=" +
+    encodeURIComponent(address) +
+    "&stdcode=" +
+    encodeURIComponent(stdcode) +
+    "&phone=" +
+    encodeURIComponent(phone) +
+    "&cell=" +
+    encodeURIComponent(cell) +
+    "&emailid=" +
+    encodeURIComponent(emailid) +
+    "&gstin=" +
+    encodeURIComponent(gstin) +
+    "&remarks=" +
+    encodeURIComponent(remarks) +
+    "&products=" +
+    JSON.stringify(products) +
+    "&dummy=" +
+    Math.floor(Math.random() * 10230000000);
+
+  var queryString = "../mailinvoice/send_quote.php";
+
+  ajaxobjext59 = $.ajax({
+    type: "POST",
+    url: queryString,
+    data: passdata,
+    cache: false,
+    success: function (response, status) {
+      if (response == "Thinking to redirect") {
+        window.location = "../logout.php";
+        return false;
+      }
+    },
+  });
+}
+
+// function send_quote() {
+//   var contactperson = $("#contactperson").val();
+//   var address = $("#address").val();
+//   var stdcode = $("#stdcode").val();
+//   var phone = $("#phone").val();
+//   var cell = $("#cell").val();
+//   var emailid = $("#emailid").val();
+//   var gstin = $("#gstin").val();
+//   var productNames = [];
+//   var purchaseTypes = [];
+//   var usageTypes = [];
+//   var amounts = [];
+//   var remarks = $("#remarks").val();
+
+//   $("input[name='productName[]']").each(function () {
+//     productNames.push($(this).val());
+//   });
+
+//   $("select[name='purchaseType[]']").each(function () {
+//     purchaseTypes.push($(this).val());
+//   });
+
+//   $("select[name='usageType[]']").each(function () {
+//     usageTypes.push($(this).val());
+//   });
+
+//   $("input[name='amount[]']").each(function () {
+//     amounts.push($(this).val());
+//   });
+
+//   var id = $("#hiddenid").val();
+
+//   var passdata =
+//     // "submittype=send_quote" +
+//     "&id=" +
+//     encodeURIComponent(id) +
+//     "&contactperson=" +
+//     contactperson +
+//     "&address=" +
+//     address +
+//     "&stdcode=" +
+//     stdcode +
+//     "&phone=" +
+//     phone +
+//     "&cell=" +
+//     cell +
+//     "&emailid=" +
+//     emailid +
+//     "&gstin=" +
+//     gstin +
+//     "&productNames=" +
+//     productNames.join(",") +
+//     "&purchaseTypes=" +
+//     purchaseTypes.join(",") +
+//     "&usageTypes=" +
+//     usageTypes.join(",") +
+//     "&amounts=" +
+//     amounts.join(",") +
+//     "&remarks=" +
+//     remarks +
+//     "&dummy=" +
+//     Math.floor(Math.random() * 10230000000);
+// alert(passdata);
+//   var queryString = "../mailinvoice/send_quote.php";
+//   // var queryString = "../testphpmailer.php";
+//   ajaxobjext59 = $.ajax({
+//     type: "POST",
+//     url: queryString,
+//     data: passdata,
+//     cache: false,
+//     success: function (response, status) {
+//       if (response == "Thinking to redirect") {
+//         window.location = "../logout.php";
+//         return false;
+//       }
+//     },
+//   });
+// }
+
+
+function quote_generate() {
+  var contactperson = $("#contactperson");
+  var address = $("#address");
+  var stdcode = $("#stdcode");
+  var phone = $("#phone");
+  var cell = $("#cell");
+  var emailid = $("#emailid");
+  var gstin = $("#gstin");
+  var productNames = [];
+  var purchaseTypes = [];
+  var usageTypes = [];
+  var amounts = [];
+  var remarks = $("#remarks");
+  var error = $("#messagebox2");
+  var confirmcheck = $("#saveconfirm");
+
+  var gstinRegex =
+    /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9]{1}$/;
+
+  if (gstin.val() == "") {
+    error.html(errormessage("Please enter GSTIN."));
+    gstin.focus();
+    return false;
+  } else if (!gstinRegex.test(gstin.val())) {
+    error.html(errormessage("Invalid GSTIN."));
+    gstin.focus();
+    return false;
+  }
+
+  $("input[name='productName[]']").each(function (index) {
+    var productName = $(this).val();
+    var purchaseType = $("select[name='purchaseType[]']").eq(index).val();
+    var usageType = $("select[name='usageType[]']").eq(index).val();
+    var amount = $("input[name='amount[]']").eq(index).val();
+
+    productNames.push(productName);
+    purchaseTypes.push(purchaseType);
+    usageTypes.push(usageType);
+    amounts.push(amount);
+  });
+
+  if (productNames.length === 0) {
+    error.html(errormessage("Please enter at least one product."));
+    return false;
+  }
+
+  if (remarks.val() == "") {
+    error.html(errormessage("Please enter Remarks."));
+    remarks.focus();
+    return false;
+  }
+
+  if (
+    contactperson.val() == "" &&
+    address.val() == "" &&
+    stdcode.val() == "" &&
+    phone.val() == "" &&
+    cell.val() == "" &&
+    emailid.val() == "" &&
+    $("#id").html() == ""
+  ) {
+    error.html(errormessage("Please Select a Lead First"));
+    return false;
+  } else {
+    error.html("");
+    if (stdcode.val() == "") {
+      error.html(errormessage("Please Enter Std code"));
+      $("#stdcode").focus();
+      return false;
+    } else if (validatestdcode(stdcode.val()) == false) {
+      error.html(errormessage("Please Enter Valid Std code"));
+      $("#stdcode").focus();
+      return false;
+    } else if (phone.val() == "") {
+      error.html(errormessage("Please Enter Landline Number"));
+      $("#phone").focus();
+      return false;
+    } else if (validatephone(phone.val()) == false) {
+      error.html(errormessage("Please Enter Valid Phone Number."));
+      $("#phone").focus();
+      return false;
+    } else if (cell.val() == "") {
+      error.html(errormessage("Please Enter Cell Number"));
+      $("#cell").focus();
+      return false;
+    } else if (!validatecell(cell.val())) {
+      error.html(errormessage("Please Enter Valid cell Number."));
+      $("#cell").focus();
+      return false;
+    } else if (emailid.val() == "") {
+      error.html(errormessage("Please Enter Emailid."));
+      $("#emailid").focus();
+      return false;
+    } else if (checkemail(emailid.val()) == false) {
+      error.html(errormessage("Please Enter a Valid Emailid."));
+      $("#emailid").focus();
+      return false;
+    } else if (confirmcheck.is(":checked") == false) {
+      error.html(
+        errormessage("Please Confirm the Check Box to send quotation.")
+      );
+      return false;
+    } else {
+      error.html("");
+      $("#messagebox2").html(processing());
+      $("#msg_box").html("");
+      var id = $("#hiddenid").val();
+
+      var passdata =
+        "submittype=quote_generate" +
+        "&id=" +
+        encodeURIComponent(id) +
+        "&contactperson=" +
+        contactperson.val() +
+        "&address=" +
+        address.val() +
+        "&stdcode=" +
+        stdcode.val() +
+        "&phone=" +
+        phone.val() +
+        "&cell=" +
+        cell.val() +
+        "&emailid=" +
+        emailid.val() +
+        "&gstin=" +
+        gstin.val() +
+        "&productnames=" +
+        productNames.join(",") +
+        "&purchasetypes=" +
+        purchaseTypes.join(",") +
+        "&usagetypes=" +
+        usageTypes.join(",") +
+        "&amounts=" +
+        amounts.join(",") +
+        "&remarks=" +
+        remarks.val() +
+        "&dummy=" +
+        Math.floor(Math.random() * 10230000000);
+
+      // alert(passdata);
+      var queryString = "../ajax/simplelead.php";
+      ajaxobjext59 = $.ajax({
+        type: "POST",
+        url: queryString,
+        data: passdata,
+        cache: false,
+        success: function (response, status) {
+          if (response == "Thinking to redirect") {
+            window.location = "../logout.php";
+            return false;
+          } else {
+            $("#messagebox2").html("");
+            var ajaxresponse = response.split("^");
+            if (ajaxresponse[0] == "1") {
+              $("#messagebox2").html(successmessage(ajaxresponse[1]));
+              $("#smscell").html(cell.val());
+              $("#newleadcell").val(cell.val());
+              $("#hiddennewleadcell").val(cell.val());
+              $("#newleademailid").val(emailid.val());
+              $("#hiddennewleademailid").val(emailid.val());
+              $("#newleadcontactperson").val(contactperson.val());
+              $("#hiddennewleadcontact").val(contactperson.val());
+              $("#prior-sms-error").html("");
+              confirmcheck.attr("checked", false);
+            } else {
+              $("#messagebox2").html(scripterror());
+            }
+          }
+        },
+        error: function (a, b) {
+          $("#messagebox2").html(scripterror());
+        },
+      });
+    }
+  }
+}
+
+// function quote_generate() {
+//   var contactperson = $("#contactperson");
+//   var address = $("#address");
+//   var stdcode = $("#stdcode");
+//   var phone = $("#phone");
+//   var cell = $("#cell");
+//   var emailid = $("#emailid");
+//   var gstin = $("#gstin");
+//   var productNames = []; // Array to store product names
+//   var purchaseTypes = []; // Array to store purchase types
+//   var usageTypes = []; // Array to store usage types
+//   var amounts = []; // Array to store amounts
+//   var remarks = $("#remarks");
+//   var error = $("#messagebox2");
+//   var confirmcheck = $("#saveconfirm");
+
+//   // GSTIN validation regex
+//   var gstinRegex =
+//     /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9]{1}$/;
+
+//   if (gstin.val() == "") {
+//     error.html(errormessage("Please enter GSTIN."));
+//     gstin.focus();
+//     return false;
+//   } else if (!gstinRegex.test(gstin.val())) {
+//     error.html(errormessage("Invalid GSTIN."));
+//     gstin.focus();
+//     return false;
+//   }
+
+//   // Iterate over each row of products
+//   $("input[name='productName[]']").each(function (index) {
+//     var productName = $(this).val();
+//     var purchaseType = $("select[name='purchasetype[]']").eq(index).val();
+//     var usageType = $("select[name='usagetype[]']").eq(index).val();
+//     var amount = $("input[name='amount[]']").eq(index).val();
+
+//     // Push the product data to the respective arrays
+//     productNames.push(productName);
+//     purchaseTypes.push(purchaseType);
+//     usageTypes.push(usageType);
+//     amounts.push(amount);
+//   });
+
+//   // Check if any product fields are empty
+//   if (productNames.length === 0) {
+//     error.html(errormessage("Please enter at least one product."));
+//     return false;
+//   }
+
+//   // Check if Remarks is empty
+//   if (remarks.val() == "") {
+//     error.html(errormessage("Please enter Remarks."));
+//     remarks.focus();
+//     return false;
+//   }
+
+//   // Check if other fields are empty
+//   if (
+//     contactperson.val() == "" &&
+//     address.val() == "" &&
+//     stdcode.val() == "" &&
+//     phone.val() == "" &&
+//     cell.val() == "" &&
+//     emailid.val() == "" &&
+//     $("#id").html() == ""
+//   ) {
+//     error.html(errormessage("Please Select a Lead First"));
+//     return false;
+//   } else {
+//     error.html("");
+//     if (stdcode.val() == "") {
+//       error.html(errormessage("Please Enter Std code"));
+//       $("#stdcode").focus();
+//       return false;
+//     } else if (validatestdcode(stdcode.val()) == false) {
+//       error.html(errormessage("Please Enter Valid Std code"));
+//       $("#stdcode").focus();
+//       return false;
+//     } else if (phone.val() == "") {
+//       error.html(errormessage("Please Enter Landline Number"));
+//       $("#phone").focus();
+//       return false;
+//     } else if (validatephone(phone.val()) == false) {
+//       error.html(errormessage("Please Enter Valid Phone Number."));
+//       $("#phone").focus();
+//       return false;
+//     } else if (cell.val() == "") {
+//       error.html(errormessage("Please Enter Cell Number"));
+//       $("#cell").focus();
+//       return false;
+//     } else if (!validatecell(cell.val())) {
+//       error.html(errormessage("Please Enter Valid cell Number."));
+//       $("#cell").focus();
+//       return false;
+//     } else if (emailid.val() == "") {
+//       error.html(errormessage("Please Enter Emailid."));
+//       $("#emailid").focus();
+//       return false;
+//     } else if (checkemail(emailid.val()) == false) {
+//       error.html(errormessage("Please Enter a Valid Emailid."));
+//       $("#emailid").focus();
+//       return false;
+//     } else if (confirmcheck.is(":checked") == false) {
+//       error.html(
+//         errormessage("Please Confirm the Check Box to send quotation.")
+//       );
+//       return false;
+//     } else {
+//       error.html("");
+//       $("#messagebox2").html(processing());
+//       $("#msg_box").html("");
+//       var id = $("#hiddenid").val();
+
+//       var passdata =
+//         "submittype=quote_generate" +
+//         "&id=" +
+//         encodeURIComponent(id) +
+//         "&contactperson=" +
+//         contactperson.val() +
+//         "&address=" +
+//         address.val() +
+//         "&stdcode=" +
+//         stdcode.val() +
+//         "&phone=" +
+//         phone.val() +
+//         "&cell=" +
+//         cell.val() +
+//         "&emailid=" +
+//         emailid.val() +
+//         "&gstin=" +
+//         gstin.val() +
+//         "&productnames=" + joinWithCommas(productNames) +
+//         "&purchasetypes=" + joinWithCommas(purchaseTypes) +
+//         "&usagetypes=" + joinWithCommas(usageTypes) +
+//         "&amounts=" + joinWithCommas(amounts) +
+//         "&remarks=" +
+//         remarks.val() +
+//         "&dummy=" +
+//         Math.floor(Math.random() * 10230000000);
+
+//       var queryString = "../ajax/simplelead.php";
+//       ajaxobjext59 = $.ajax({
+//         type: "POST",
+//         url: queryString,
+//         data: passdata,
+//         cache: false,
+//         success: function (response, status) {
+//           if (response == "Thinking to redirect") {
+//             window.location = "../logout.php";
+//             return false;
+//           } else {
+//             $("#messagebox2").html("");
+//             var ajaxresponse = response.split("^");
+//             if (ajaxresponse[0] == "1") {
+//               $("#messagebox2").html(successmessage(ajaxresponse[1]));
+//               $("#smscell").html(cell.val());
+//               $("#newleadcell").val(cell.val());
+//               $("#hiddennewleadcell").val(cell.val());
+//               $("#newleademailid").val(emailid.val());
+//               $("#hiddennewleademailid").val(emailid.val());
+//               $("#newleadcontactperson").val(contactperson.val());
+//               $("#hiddennewleadcontact").val(contactperson.val());
+//               $("#prior-sms-error").html("");
+//               confirmcheck.attr("checked", false);
+//             } else {
+//               $("#messagebox2").html(scripterror());
+//             }
+//           }
+//         },
+//         error: function (a, b) {
+//           $("#messagebox2").html(scripterror());
+//         },
+//       });
+//     }
+//   }
+// }
+
+// // Function to join array elements with commas
+// function joinWithCommas(arr) {
+//   return arr.join(",");
+// }
+
+// function quote_generate() {
+//   var contactperson = $("#contactperson");
+//   var address = $("#address");
+//   var stdcode = $("#stdcode");
+//   var phone = $("#phone");
+//   var cell = $("#cell");
+//   var emailid = $("#emailid");
+//   var gstin = $("#gstin");
+//   var productNames = []; // Array to store product names
+//   var purchaseTypes = []; // Array to store purchase types
+//   var usageTypes = []; // Array to store usage types
+//   var amounts = []; // Array to store amounts
+//   var remarks = $("#remarks");
+//   var error = $("#messagebox2");
+//   var confirmcheck = $("#saveconfirm");
+
+//   // GSTIN validation regex
+//   var gstinRegex =
+//     /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9]{1}$/;
+
+//   if (gstin.val() == "") {
+//     error.html(errormessage("Please enter GSTIN."));
+//     gstin.focus();
+//     return false;
+//   } else if (!gstinRegex.test(gstin.val())) {
+//     error.html(errormessage("Invalid GSTIN."));
+//     gstin.focus();
+//     return false;
+//   }
+
+//   // Iterate over each row of products
+//   $("input[name='product_name[]']").each(function (index) {
+//     var productName = $(this).val();
+//     var purchaseType = $("select[name='purchase_type[]']").eq(index).val();
+//     var usageType = $("select[name='usage_type[]']").eq(index).val();
+//     var amount = $("input[name='amount[]']").eq(index).val();
+
+//     // Push the product data to the respective arrays
+//     productNames.push(productName);
+//     purchaseTypes.push(purchaseType);
+//     usageTypes.push(usageType);
+//     amounts.push(amount);
+//   });
+
+//   // Check if any product fields are empty
+//   if (productNames.length === 0) {
+//     error.html(errormessage("Please enter at least one product."));
+//     return false;
+//   }
+
+//   // Check if Remarks is empty
+//   if (remarks.val() == "") {
+//     error.html(errormessage("Please enter Remarks."));
+//     remarks.focus();
+//     return false;
+//   }
+
+//   // Check if other fields are empty
+//   if (
+//     contactperson.val() == "" &&
+//     address.val() == "" &&
+//     stdcode.val() == "" &&
+//     phone.val() == "" &&
+//     cell.val() == "" &&
+//     emailid.val() == "" &&
+//     $("#id").html() == ""
+//   ) {
+//     error.html(errormessage("Please Select a Lead First"));
+//     return false;
+//   } else {
+//     error.html("");
+//     if (stdcode.val() == "") {
+//       error.html(errormessage("Please Enter Std code"));
+//       $("#stdcode").focus();
+//       return false;
+//     } else if (validatestdcode(stdcode.val()) == false) {
+//       error.html(errormessage("Please Enter Valid Std code"));
+//       $("#stdcode").focus();
+//       return false;
+//     } else if (phone.val() == "") {
+//       error.html(errormessage("Please Enter Landline Number"));
+//       $("#phone").focus();
+//       return false;
+//     } else if (validatephone(phone.val()) == false) {
+//       error.html(errormessage("Please Enter Valid Phone Number."));
+//       $("#phone").focus();
+//       return false;
+//     } else if (cell.val() == "") {
+//       error.html(errormessage("Please Enter Cell Number"));
+//       $("#cell").focus();
+//       return false;
+//     } else if (!validatecell(cell.val())) {
+//       error.html(errormessage("Please Enter Valid cell Number."));
+//       $("#cell").focus();
+//       return false;
+//     } else if (emailid.val() == "") {
+//       error.html(errormessage("Please Enter Emailid."));
+//       $("#emailid").focus();
+//       return false;
+//     } else if (checkemail(emailid.val()) == false) {
+//       error.html(errormessage("Please Enter a Valid Emailid."));
+//       $("#emailid").focus();
+//       return false;
+//     } else if (confirmcheck.is(":checked") == false) {
+//       error.html(
+//         errormessage("Please Confirm the Check Box to send quotation.")
+//       );
+//       return false;
+//     } else {
+//       error.html("");
+//       $("#messagebox2").html(processing());
+//       $("#msg_box").html("");
+//       var id = $("#hiddenid").val();
+
+//       var passdata =
+//         "submittype=quote_generate" +
+//         "&id=" +
+//         encodeURIComponent(id) +
+//         "&contactperson=" +
+//         contactperson.val() +
+//         "&address=" +
+//         address.val() +
+//         "&stdcode=" +
+//         stdcode.val() +
+//         "&phone=" +
+//         phone.val() +
+//         "&cell=" +
+//         cell.val() +
+//         "&emailid=" +
+//         emailid.val() +
+//         "&gstin=" +
+//         gstin.val() +
+//         "&product_names=" +
+//         productNames.join(",") + // Separate product names by commas
+//         "&purchase_types=" +
+//         purchaseTypes.join(",") + // Separate purchase types by commas
+//         "&usage_types=" +
+//         usageTypes.join(",") + // Separate usage types by commas
+//         "&amounts=" +
+//         amounts.join(",") + // Separate amounts by commas
+//         "&remarks=" +
+//         remarks.val() +
+//         "&dummy=" +
+//         Math.floor(Math.random() * 10230000000);
+
+//       var queryString = "../ajax/simplelead.php";
+//       ajaxobjext59 = $.ajax({
+//         type: "POST",
+//         url: queryString,
+//         data: passdata,
+//         cache: false,
+//         success: function (response, status) {
+//           if (response == "Thinking to redirect") {
+//             window.location = "../logout.php";
+//             return false;
+//           } else {
+//             $("#messagebox2").html("");
+//             var ajaxresponse = response.split("^");
+//             if (ajaxresponse[0] == "1") {
+//               $("#messagebox2").html(successmessage(ajaxresponse[1]));
+//               $("#smscell").html(cell.val());
+//               $("#newleadcell").val(cell.val());
+//               $("#hiddennewleadcell").val(cell.val());
+//               $("#newleademailid").val(emailid.val());
+//               $("#hiddennewleademailid").val(emailid.val());
+//               $("#newleadcontactperson").val(contactperson.val());
+//               $("#hiddennewleadcontact").val(contactperson.val());
+//               $("#prior-sms-error").html("");
+//               confirmcheck.attr("checked", false);
+//             } else {
+//               $("#messagebox2").html(scripterror());
+//             }
+//           }
+//         },
+//         error: function (a, b) {
+//           $("#messagebox2").html(scripterror());
+//         },
+//       });
+//     }
+//   }
+// }
+
+function gstin(gstin) {
+  // GSTIN regular expression pattern
+  var gstinPattern =
+    /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z0-9A-Z]{1}[0-9A-Z]{1}$/;
+
+  // Check if the provided GSTIN matches the pattern
+  if (gstinPattern.test(gstin)) {
+    // Extract individual components
+    var stateCode = gstin.substring(0, 2);
+    var pan = gstin.substring(2, 12);
+    var numRegistrations = gstin.charAt(12);
+    var defaultChar = gstin.charAt(13);
+    var checksumDigit = gstin.charAt(14);
+
+    // Validate state code (you may customize this validation based on your requirements)
+    if (isValidStateCode(stateCode)) {
+      // Validate PAN (you may customize this validation based on your requirements)
+      if (isValidPAN(pan)) {
+        // Validate number of registrations
+        if (numRegistrations !== "0") {
+          // Validate default character
+          if (defaultChar === "Z") {
+            // Validate checksum digit
+            if (isValidChecksum(gstin)) {
+              return true; // GSTIN is valid
+            } else {
+              return "Invalid checksum digit";
+            }
+          } else {
+            return "Invalid default character";
+          }
+        } else {
+          return "Number of registrations cannot be 0";
+        }
+      } else {
+        return "Invalid PAN";
+      }
+    } else {
+      return "Invalid state code";
+    }
+  } else {
+    return "Invalid GSTIN format";
+  }
+}
+
+function product() {
+  var gstin = $("#gstin");
+  var product = $("#Product");
+  var purchaseType = $("#purchase");
+  var usageType = $("#usage");
+  var amount = $("#amount");
+  var remarks = $("#remarks");
+
+  var contactperson = $("#contactperson");
+  var address = $("#address");
+  var stdcode = $("#stdcode");
+  var phone = $("#phone");
+  var cell = $("#cell");
+  var emailid = $("#emailid");
+  var error = $("#messagebox1");
+  var confirmcheck = $("#saveconfirm");
+
+  if (
+    contactperson.val() === "" &&
+    address.val() === "" &&
+    stdcode.val() === "" &&
+    phone.val() === "" &&
+    cell.val() === "" &&
+    emailid.val() === "" &&
+    $("#id").html() === ""
+  ) {
+    error.html(errormessage("Please Select a Lead First"));
+    return false;
+  } else {
+    error.html("");
+    if (stdcode.val() === "") {
+      error.html(errormessage("Please Enter Std code"));
+      $("#stdcode").focus();
+      return false;
+    } else if (!validatestdcode(stdcode.val())) {
+      error.html(errormessage("Please Enter Valid Std code"));
+      $("#stdcode").focus();
+      return false;
+    } else if (phone.val() === "") {
+      error.html(errormessage("Please Enter Landline Number"));
+      $("#phone").focus();
+      return false;
+    } else if (!validatephone(phone.val())) {
+      error.html(errormessage("Please Enter Valid Phone Number."));
+      $("#phone").focus();
+      return false;
+    } else if (cell.val() === "") {
+      error.html(errormessage("Please Enter Cell Number"));
+      $("#cell").focus();
+      return false;
+    } else if (!validatecell(cell.val())) {
+      error.html(errormessage("Please Enter Valid Cell Number."));
+      $("#cell").focus();
+      return false;
+    } else if (emailid.val() === "") {
+      error.html(errormessage("Please Enter Emailid."));
+      $("#emailid").focus();
+      return false;
+    } else if (!checkemail(emailid.val())) {
+      error.html(errormessage("Please Enter a Valid Emailid."));
+      $("#emailid").focus();
+      return false;
+    } else if (!confirmcheck.prop("checked")) {
+      error.html(errormessage("Please Confirm the Check Box to Save."));
+      return false;
+    } else {
+      $("#messagebox1").html(processing());
+      $("#msg_box").html("");
+      var id = $("#hiddenid").val();
+      var passdata =
+        "&submittype=updatedata&id=" +
+        encodeURIComponent(id) +
+        "&contactperson=" +
+        encodeURIComponent(contactperson.val()) +
+        "&address=" +
+        encodeURIComponent(address.val()) +
+        "&stdcode=" +
+        encodeURIComponent(stdcode.val()) +
+        "&phone=" +
+        encodeURIComponent(phone.val()) +
+        "&cell=" +
+        encodeURIComponent(cell.val()) +
+        "&emailid=" +
+        encodeURIComponent(emailid.val()) +
+        "&dummy=" +
+        Math.floor(Math.random() * 10230000000);
+      var queryString = "../ajax/simplelead.php";
+      ajaxobjext59 = $.ajax({
+        type: "POST",
+        url: queryString,
+        data: passdata,
+        cache: false,
+        success: function (response, status) {
+          if (response === "Thinking to redirect") {
+            window.location = "../logout.php";
+            return false;
+          } else {
+            $("#messagebox1").html("");
+            var ajaxresponse = response.split("^");
+            if (ajaxresponse[0] === "1") {
+              $("#messagebox1").html(successmessage(ajaxresponse[1]));
+              $("#smscell").html(cell.val());
+              $("#newleadcell").val(cell.val());
+              $("#hiddennewleadcell").val(cell.val());
+              $("#newleademailid").val(emailid.val());
+              $("#hiddennewleademailid").val(emailid.val());
+              $("#newleadcontactperson").val(contactperson.val());
+              $("#hiddennewleadcontact").val(contactperson.val());
+              $("#prior-sms-error").html("");
+              confirmcheck.prop("checked", false);
+            } else {
+              $("#messagebox1").html(scripterror());
+            }
+          }
+        },
+        error: function (a, b) {
+          $("#messagebox1").html(scripterror());
+        },
+      });
+    }
   }
 }
 
@@ -2766,3 +3683,204 @@ function checkDataRow(value) {
 		$("#showeditimage").show();
 	}
 }*/
+
+// customer -----------------
+
+function previewQuote() {
+  // Retrieve values from input fields
+  const gstin = document.getElementById("gstin").value;
+  const remarks = document.getElementById("remarks").value;
+
+  // Get all product rows
+  const productRows = document.querySelectorAll("#adddescriptionrows tr");
+
+  // Create an overlay element
+  var overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)"; // Semi-transparent black background
+  overlay.style.zIndex = "9999"; // Ensure the overlay is on top of other elements
+  overlay.style.overflow = "auto"; // Enable scrolling if the content is too large
+
+  // Create a container for the entire HTML content
+  var container = document.createElement("div");
+  container.style.backgroundColor = "white"; // Transparent background color for the content
+  container.style.borderRadius = "5px"; // Rounded corners
+  container.style.width = "80%"; // Set width to 80% of the viewport width
+
+  container.style.maxWidth = "600px"; // Limit the maximum width to 800px
+  container.style.margin = "10% auto"; // Center the container
+  container.style.padding = "20px"; // Add padding to the container
+
+  // Create the quotation template
+  var quotationTemplate = `
+  <html>
+  
+  <head>
+      <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1' />
+  </head>
+  
+  <body>
+      <table width="100%" border="0" cellspacing="0" cellpadding="3" align="center" style="border:solid 2px #ACACAC">
+          <tr>
+              <td>&nbsp;</td>
+          </tr>
+          <tr>
+              <td></td>
+          </tr>
+          <tr>
+              <td>
+                  <table width="100%" border="0" cellspacing="0" cellpadding="5" style="font-family:calibri">
+                      <tr>
+                          <td>
+                              <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+  
+                                      <td width="50%">Date: 26/10/2023<br>
+                                          RELYON SOFTECH LIMITED<br>
+                                          No. 73, Shreelekha Complex, WOC Road, Bangalore - 560 086
+                                          <br>
+                                          <strong>GSTIN: </strong>29AABCR7796N1ZC | <strong>PAN:</strong> AABCR7796N <br>
+                                          <strong>CIN No.:</strong> U72200KA2000PLC027572 | <strong>PAN:</strong>
+                                          AABCR7796N
+                                      </td>
+  
+  
+                                      <td width="50%"><img src="cid:8888888888" alt="Relyon" width="189" height="66"
+                                              align="right"></td>
+                                  </tr>
+  
+                              </table>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td bgcolor="#7aacdd" height="10px" align="center"><strong style="font-size: 22;">Quotation for
+                                  Saral Software</strong></td>
+                      </tr> <br>
+                      <tr>
+                          <td colspan="2">
+                              <font color="#FF0000"><strong>Quotation Number: RSL/1035/2023-24</strong> </font> <br>
+                              <font color="#FF0000"><strong>Quote Valid Until: 05/11/2023</strong></font>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>
+                              <p><strong>Customer Details:</strong><br>
+                                  <strong>GSTIN:</strong> 29AACCP4397E1Z5<br>
+                                  <strong>Name:</strong> PRATHAM MOTORS PVT LTD<br>
+                                  <strong>Place:</strong> SURVEY NO 16, OUTER RING ROAD, Bangalore-560037<br>
+                                  <strong>Prn Name:</strong> PRASAD SHETTY / Sathish P<br>
+                                  <strong>Email:</strong> fc@prathammotors.com / it@prathammotors.com<br>
+                                  <strong>Mobile:</strong> 9591916522
+                              </p>
+  
+                              <p><strong>Seller Details:</strong><br>
+                                  <strong>Mtg Extv:</strong> NAVEEN KUMAR G M<br>
+                                  <strong>Mobile:</strong> 9449599738<br>
+                                  <strong>Email:</strong> naveen.kumar@relyonsoft.com<br>
+                                  <strong>URL:</strong> <a href="www.relyonsoft.com">www.relyonsoft.com</a><br>
+                              </p>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>
+                              <p>Dear Sir/Madam,</p>
+                              <p>We thank you for your interest in our Software. Relyon has more than 35,000 customers
+                                  spread across India with more than 100,000 users using our solutions. Relyon has served
+                                  varied verticals like Banks, Telecom, Manufacturing, Textile, IT/ITES, Hospitality,
+                                  Health Care, Education etc. This makes us the natural choice for many Organizations and
+                                  Professionals.</p>
+                              <p>As per your requirement, we furnish herein below our competitive offer for the same.</p>
+                              <table width="100%" border="1" cellspacing="0" cellpadding="3">
+                                  <tr>
+                                      <td><strong>Sl. No.</strong></td>
+                                      <td><strong>Description</strong></td>
+                                      <td><strong>Purchase Type</strong></td>
+                                      <td><strong>Usage Type</strong></td>
+                                      <td><strong>Amount</strong></td>
+                                  </tr>
+                                  
+`;
+
+  // Add product data to the quotation template
+  productRows.forEach((row, index) => {
+    if (index !== -1) {
+      // Skip the header row
+      const cells = row.querySelectorAll("td");
+      const productName = cells[1].querySelector('input[type="text"]').value;
+      const purchaseType = cells[2].querySelector("select").value;
+      const usageType = cells[3].querySelector("select").value;
+      const amount = cells[4].querySelector('input[type="text"]').value;
+
+      // Adjust index to start from 1
+      const serialNumber = index + 1;
+
+      quotationTemplate += `
+            <tr>
+                <td>${serialNumber}</td>
+                <td>${productName}</td>
+                <td>${purchaseType}</td>
+                <td>${usageType}</td>
+                <td>${amount}</td>
+            </tr>
+        `;
+    }
+  });
+
+  // Add the closing tags to the quotation template
+  quotationTemplate += `
+          </table>
+          <p>The above offers are covered under the following Terms:</p>
+          <p><strong>Payments:</strong> 100% payment at the successful installation of the product<br>
+          <strong>Delivery:</strong> Within a week from the date of the Purchase order.<br>
+          <span style="color: #FF0000;"> <strong>Taxes:</strong> Extra as applicable (18% GST).
+          </p>
+          </span>
+          <p>We hope our Quotation is in line with your requirement. However, for any commercial &
+          technical clarifications please feel free to contact us. We look forward to your
+          valuable & Precious Order.</p>
+          <p>Thanking You, <br> Sincerely Yours,<br>
+          for RELYON SOFTECH LTD, <br> NAVEEN KUMAR G M</p>
+          <td>
+          </td>
+          </tr>
+          </table>
+          </td>
+          </tr>
+          <tr>
+          <td></td>
+          </tr>
+          </table>
+
+          <button onclick="process()" style="display: block; margin:auto; padding: 5px 10px;cursor: pointer;">Proceed</button>
+
+
+          </body>
+          
+          </html>
+  `;
+
+  // Set the quotation template as the inner HTML of the container
+  container.innerHTML = quotationTemplate;
+
+  // Append the container to the overlay
+  overlay.appendChild(container);
+
+  // Append the overlay to the body
+  document.body.appendChild(overlay);
+
+  // Close the overlay when clicking outside of the content
+  overlay.addEventListener("click", function (event) {
+    if (event.target === overlay) {
+      overlay.remove();
+    }
+  });
+}
+
+function process() {
+  // Add your code here to proceed to payment
+  console.log("Sending quote...");
+}

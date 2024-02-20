@@ -1,6 +1,6 @@
 <?php
 //Include Database Configuration details
-error_reporting(0);
+error_reporting(1);
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
 
@@ -8,6 +8,7 @@ if (file_exists("../inc/dbconfig.php")) {
 	include("../inc/dbconfig.php");
 } else {
 	include("inc/dbconfig.php");
+	
 }
 
 //Connect to host
@@ -303,25 +304,25 @@ function sendsms($servicename, $tonumber, $smstext, $senddate, $sendtime)
 		return false;
 	else {
 		/*$senddate = datetimelocal("Y-m-d");
-			  $sendtime = datetimelocal("H:i");
-			  
-			  $accountid = "20010262";
-			  $accountpassword = "fcmy7q";
-			  $tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10);
-			  $smstext = substr($smstext, 0, 159);
-		  
-			  $targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?";
-			  $targeturl .= "user=".$accountid;
-			  $targeturl .= "&pwd=".$accountpassword;
-			  $targeturl .= "&senderid=RELYON";
-			  $targeturl .= "&mobileno=".$tonumber;
-			  $targeturl .= "&msgtext=".urlencode($smstext);
-			  $targeturl .= "&priority=High";
-		  
-			  $response = file_get_contents($targeturl);
-			  $splitdata = explode(",",$response);
-			  $messageid = $splitdata[0];
-			  $message = "Sent Successfully. [Message ID = ".$messageid."]";*/
+					$sendtime = datetimelocal("H:i");
+					
+					$accountid = "20010262";
+					$accountpassword = "fcmy7q";
+					$tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10);
+					$smstext = substr($smstext, 0, 159);
+				
+					$targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?";
+					$targeturl .= "user=".$accountid;
+					$targeturl .= "&pwd=".$accountpassword;
+					$targeturl .= "&senderid=RELYON";
+					$targeturl .= "&mobileno=".$tonumber;
+					$targeturl .= "&msgtext=".urlencode($smstext);
+					$targeturl .= "&priority=High";
+				
+					$response = file_get_contents($targeturl);
+					$splitdata = explode(",",$response);
+					$messageid = $splitdata[0];
+					$message = "Sent Successfully. [Message ID = ".$messageid."]";*/
 
 		//Insert to SMS Logs Database
 		$query = "insert into `smslogs`(servicename, tonumber, smstext, senddate, sendtime)values('" . $servicename . "', '" . $tonumber . "', '" . $smstext . "', '" . $senddate . "', '" . $sendtime . "')";
@@ -339,35 +340,35 @@ function sendsmsforleads($servicename, $tonumber, $smstext, $senddate, $sendtime
 		return true;
 	} else {
 		/*$senddate = datetimelocal("Y-m-d");
-			  $sendtime = datetimelocal("H:i");
-			  
-			  $accountid = "20010262";
-			  $accountpassword = "fcmy7q";
-			  $tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10);
-			  $smstext = substr($smstext, 0, 159);
-		  
-			  $targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?";
-			  $targeturl .= "user=".$accountid;
-			  $targeturl .= "&pwd=".$accountpassword;
-			  $targeturl .= "&senderid=RELYON";
-			  $targeturl .= "&mobileno=".$tonumber;
-			  $targeturl .= "&msgtext=".urlencode($smstext);
-			  $targeturl .= "&priority=High";
-		  
-			  $response = file_get_contents($targeturl);
-			  $splitdata = explode(",",$response);
-			  $messageid = $splitdata[0];
-			  $message = "Sent Successfully. [Message ID = ".$messageid."]";*/
+					$sendtime = datetimelocal("H:i");
+					
+					$accountid = "20010262";
+					$accountpassword = "fcmy7q";
+					$tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10);
+					$smstext = substr($smstext, 0, 159);
+				
+					$targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?";
+					$targeturl .= "user=".$accountid;
+					$targeturl .= "&pwd=".$accountpassword;
+					$targeturl .= "&senderid=RELYON";
+					$targeturl .= "&mobileno=".$tonumber;
+					$targeturl .= "&msgtext=".urlencode($smstext);
+					$targeturl .= "&priority=High";
+				
+					$response = file_get_contents($targeturl);
+					$splitdata = explode(",",$response);
+					$messageid = $splitdata[0];
+					$message = "Sent Successfully. [Message ID = ".$messageid."]";*/
 
 
 		/*	$file = $_SERVER['DOCUMENT_ROOT'].'/LMS/filescreated/'.'SMS.txt';
-			   $current = stripslashes($smstext)."\r\n";
-			   $fp = fopen($file,'a+');
-			   if($fp)
-				   fwrite($fp,$current);
-			   fclose($fp);
-			   
-			   //echo('here');exit;*/
+					 $current = stripslashes($smstext)."\r\n";
+					 $fp = fopen($file,'a+');
+					 if($fp)
+						 fwrite($fp,$current);
+					 fclose($fp);
+					 
+					 //echo('here');exit;*/
 		//Insert to SMS Logs Database
 		$query = "insert into `smslogs`(servicename, tonumber, smstext, senddate, sendtime,leadid,smssentby)values('" . $servicename . "', '" . $tonumber . "', '" . addslashes($smstext) . "', '" . $senddate . "', '" . $sendtime . "','" . $leadid . "','" . $sentby . "')";
 		$result = runmysqlquery($query);
@@ -526,45 +527,45 @@ function lmsdeletecookie($cookiename)
 
 function lmsgetcookie($cookiename)
 {
-    $suff = "55";
-    // Convert the Cookie Name to base64
-    $Encodestr = encodevalue($cookiename);
+	$suff = "55";
+	// Convert the Cookie Name to base64
+	$Encodestr = encodevalue($cookiename);
 
-    // Read cookie name
-    if (isset($_COOKIE[$Encodestr])) {
-        $stringret = $_COOKIE[$Encodestr];
-        if (!is_null($stringret)) {
-            $stringret = stripslashes($stringret);
-        }
+	// Read cookie name
+	if (isset($_COOKIE[$Encodestr])) {
+		$stringret = $_COOKIE[$Encodestr];
+		if (!is_null($stringret)) {
+			$stringret = stripslashes($stringret);
+		}
 
-        // Convert the read cookie name to md5 encode technique
-        $Encodestring = md5($stringret);
+		// Convert the read cookie name to md5 encode technique
+		$Encodestring = md5($stringret);
 
-        // Appended the encoded cookie name to 55(suffix)
-        $resultstr = $Encodestr . $suff;
+		// Appended the encoded cookie name to 55(suffix)
+		$resultstr = $Encodestr . $suff;
 
-        if (isset($_COOKIE[$resultstr])) {
-            $cookiemd5 = $_COOKIE[$resultstr];
+		if (isset($_COOKIE[$resultstr])) {
+			$cookiemd5 = $_COOKIE[$resultstr];
 
-            // Compare the encoded value with the fetched cookie, if the condition is true decode the cookie value
-            if ($Encodestring == $cookiemd5) {
-                $decodevalue = decodevalue($stringret);
-                // Remove the Prefix/Suffix Characters
-                $string1 = substr($decodevalue, 7);
-                $resultstring = substr($string1, 0, -7);
-                return $resultstring;
-            } else {
-                // Handle the case where cookies don't match
-                return false;
-            }
-        } else {
-            // Handle the case where the resultstr cookie key is not set
-            return false;
-        }
-    } else {
-        // Handle the case where the Encodestr cookie key is not set
-        return false;
-    }
+			// Compare the encoded value with the fetched cookie, if the condition is true decode the cookie value
+			if ($Encodestring == $cookiemd5) {
+				$decodevalue = decodevalue($stringret);
+				// Remove the Prefix/Suffix Characters
+				$string1 = substr($decodevalue, 7);
+				$resultstring = substr($string1, 0, -7);
+				return $resultstring;
+			} else {
+				// Handle the case where cookies don't match
+				return false;
+			}
+		} else {
+			// Handle the case where the resultstr cookie key is not set
+			return false;
+		}
+	} else {
+		// Handle the case where the Encodestr cookie key is not set
+		return false;
+	}
 }
 
 
