@@ -1609,7 +1609,17 @@ if ($filteredtoexcel == 'yes') {
                                                   <tr>
                                                     <td colspan="3" style="text-align:center;">
                                                       <button name="save" type="button" class="formbutton" id="save"
-                                                        onclick="quote_generate(); send_quote();" style="align-items: center;">Send Quote</button>
+                                                        onclick="quote_generate(); send_quote(); resetForm();"
+                                                        style="align-items: center;">Send Quote</button>
+
+                                                      <script>
+                                                        function resetForm() {
+                                                          var form = document.getElementById("quoteForm");
+                                                          form.reset();
+                                                          $("#adddescriptionrows tr").not(':first').remove(); // Remove all rows except the first one
+                                                        }
+                                                      </script>
+
                                                       <!-- <button name="sendQuote" type="button" class="formbutton" id="sendQuote" onclick="sendquote();">Send Quote</button> -->
                                                       <!-- <button name="preview" type="button" class="formbutton" id="preview" onclick="previewQuote();">Preview</button> -->
                                                     </td>
@@ -1637,7 +1647,7 @@ if ($filteredtoexcel == 'yes') {
                               </table>
                             </form>
 
-                            
+
 
                             <!-- quote -->
 

@@ -8,6 +8,7 @@ include("../functions/phpfunctions.php");
 include("../inc/getuserslno.php");
 
 
+
 $submittype = $_POST['submittype'];
 switch ($submittype) {
 
@@ -107,96 +108,7 @@ switch ($submittype) {
 
 
 
-	// 	case "quote_generate":
-// 		$leadid = $_POST['id'];
 
-	// 		$query = "SELECT * FROM leads WHERE id = '$leadid'";
-// 		$fetch = runmysqlqueryfetch($query);
-
-	// 		$dealerid = $fetch['dealerid'];
-
-	// 		$dealerQuery = "SELECT `dlrname`, `dlrcell`, `dlremail` FROM dealers WHERE id = '$dealerid'";
-// 		$dealerResult = runmysqlqueryfetch($dealerQuery);
-
-	// 		// Set quotedate to the current date
-// 		$quotedate = date("Y-m-d");
-
-	// 		$year = date("Y");
-// 		$quoteNumberQuery = "SELECT MAX(id) as max_id FROM lms_quote";
-// 		$quoteNumberResult = runmysqlqueryfetch($quoteNumberQuery);
-// 		$autoIncrementValue = $quoteNumberResult['max_id'] + 1;
-// 		$quotenumber = "RSL" . $year . "Q" . str_pad($autoIncrementValue, 2, "0", STR_PAD_LEFT);
-
-	// 		$validdate = date("Y-m-d", strtotime("+14 days"));
-
-	// 		// Set other details
-// 		$company = $fetch['company'];
-// 		$emailid = $fetch['emailid'];
-// 		$address = $fetch['address'];
-// 		$customername = $fetch['name'];
-// 		$cell = $fetch['cell'];
-// 		$extvname = $dealerResult['dlrname'];
-// 		$extvcell = $dealerResult['dlrcell'];
-// 		$extvemailid = $dealerResult['dlremail'];
-// 		$gstin = $_POST['gstin'];
-// 		$remarks = $_POST['remarks'];
-
-	// 		// JSON deserialize product details
-// 		// JSON serialize product details
-// 		$product_name = json_encode($_POST['product_names']);
-// 		$purchase_type = json_encode($_POST['purchase_types']);
-// 		$usage_type = json_encode($_POST['usage_types']);
-// 		$amount = json_encode($_POST['amounts']);
-
-	// 		$insertQuoteQuery = "INSERT INTO lms_quote (
-//     `quotedate`,
-//     `quotenumber`,
-//     `validdate`,
-//     `leadid`,
-//     `company`,
-//     `emailid`,
-//     `customername`,
-//     `cell`,
-//     `extvname`,
-//     `extvcell`,
-//     `extvemailid`,
-//     `gstinnumber`,
-//     `remarks`,
-//     `product_name`,
-//     `purchase_type`,
-//     `usage_type`,
-//     `amount`
-// ) VALUES (
-//     '$quotedate',
-//     '$quotenumber',
-//     '$validdate',
-//     '$leadid',
-//     '$company',
-//     '$emailid',
-//     '$customername',
-//     '$cell',
-//     '$extvname',
-//     '$extvcell',
-//     '$extvemailid',
-//     '$gstin',
-//     '$remarks',
-//     '$product_name',
-//     '$purchase_type',
-//     '$usage_type',
-//     '$amount'
-// )";
-
-	// 		// Execute the SQL query for lms_quote
-// 		$resultQuote = runmysqlquery($insertQuoteQuery);
-
-	// 		if ($resultQuote) {
-// 			echo "1^Sent Quote Successfully.";
-// 		} else {
-// 			echo "0^Unable to send quote...";
-// 		}
-
-
-	// 		break;
 
 
 

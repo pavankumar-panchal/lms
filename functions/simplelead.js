@@ -1229,6 +1229,7 @@ function send_quote() {
       }
     },
   });
+  // reset the product form
 }
 
 // function send_quote() {
@@ -1311,6 +1312,14 @@ function send_quote() {
 // }
 
 
+
+
+function convertToSingleWord(value) {
+  return value.replace(/\s+/g, ''); // Remove all white spaces
+}
+
+
+
 function quote_generate() {
   var contactperson = $("#contactperson");
   var address = $("#address");
@@ -1340,6 +1349,7 @@ function quote_generate() {
     return false;
   }
 
+
   $("input[name='productName[]']").each(function (index) {
     var productName = $(this).val();
     var purchaseType = $("select[name='purchaseType[]']").eq(index).val();
@@ -1348,9 +1358,22 @@ function quote_generate() {
 
     productNames.push(productName);
     purchaseTypes.push(purchaseType);
-    usageTypes.push(usageType);
+    // Convert usageType to a single word format
+    usageTypes.push(convertToSingleWord(usageType));
     amounts.push(amount);
   });
+
+  // $("input[name='productName[]']").each(function (index) {
+  //   var productName = $(this).val();
+  //   var purchaseType = $("select[name='purchaseType[]']").eq(index).val();
+  //   var usageType = $("select[name='usageType[]']").eq(index).val();
+  //   var amount = $("input[name='amount[]']").eq(index).val();
+
+  //   productNames.push(productName);
+  //   purchaseTypes.push(purchaseType);
+  //   usageTypes.push(usageType);
+  //   amounts.push(amount);
+  // });
 
   if (productNames.length === 0) {
     error.html(errormessage("Please enter at least one product."));
@@ -1486,6 +1509,9 @@ function quote_generate() {
       });
     }
   }
+  // reset form 
+  // resetForm();
+
 }
 
 // function quote_generate() {

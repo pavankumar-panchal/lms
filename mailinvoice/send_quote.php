@@ -30,13 +30,13 @@ $dealerQuery = "SELECT `dlrname`, `dlrcell`, `dlremail` FROM dealers WHERE id = 
 $dealerResult = runmysqlqueryfetch($dealerQuery);
 
 // Generate quote details
-$quotedate = date("Y-m-d");
+$quotedate = date("d-m-Y");
 $year = date("Y");
 $quoteNumberQuery = "SELECT MAX(id) as max_id FROM lms_quote";
 $quoteNumberResult = runmysqlqueryfetch($quoteNumberQuery);
 $autoIncrementValue = $quoteNumberResult['max_id'] + 1;
 $quotenumber = "RSL" . $year . "Q" . str_pad($autoIncrementValue, 2, "0", STR_PAD_LEFT);
-$validdate = date("Y-m-d", strtotime("+14 days"));
+$validdate = date("d-m-Y", strtotime("+14 days"));
 $company = $fetch['company'];
 $emailid = $fetch['emailid'];
 $customername = $fetch['name'];
@@ -46,10 +46,8 @@ $extvname = $dealerResult['dlrname'];
 $extvcell = $dealerResult['dlrcell'];
 $extvemailid = $dealerResult['dlremail'];
 
-// Decode the products JSON string
 $products = json_decode($_POST['products'], true);
 
-// Prepare the products table
 $productRows = '';
 foreach ($products as $index => $product) {
     $productRows .= "<tr>
@@ -62,10 +60,8 @@ foreach ($products as $index => $product) {
 
 }
 
-// Load HTML template
 $template = file_get_contents('send_quote.html');
 
-// Replace placeholders in the template with actual values
 $template = str_replace('##quotedate##', $quotedate, $template);
 $template = str_replace('##gstin##', $gstin, $template);
 $template = str_replace('##quotenumber##', $quotenumber, $template);
@@ -80,7 +76,6 @@ $template = str_replace('##extvcell##', $extvcell, $template);
 $template = str_replace('##extvemailid##', $extvemailid, $template);
 $template = str_replace('##productRows##', $productRows, $template);
 
-// Create a new PHPMailer instance
 $mail = new PHPMailer;
 
 // Set email format to HTML
@@ -97,9 +92,7 @@ $mail->Port = 465;
 
 // Sender info
 $mail->setFrom('panchalpavan111@gmail.com', 'Relyon');
-$mail->addReplyTo('panchalpavan800@gmail.com', 'Info');
 
-// Add a recipient
 // $mail->addAddress('panchalpavan800@gmail.com', 'kumar');
 $mail->addAddress($extvemailid, $extvname);
 
