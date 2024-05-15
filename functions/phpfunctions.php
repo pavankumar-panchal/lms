@@ -1,14 +1,15 @@
 <?php
 //Include Database Configuration details
+// sesion_start();
 error_reporting(1);
 // error_reporting(E_ALL);
 // ini_set('display_errors', 1);
 
 if (file_exists("../inc/dbconfig.php")) {
-	include("../inc/dbconfig.php");
+	include ("../inc/dbconfig.php");
 } else {
-	include("inc/dbconfig.php");
-	
+	include ("inc/dbconfig.php");
+
 }
 
 //Connect to host
@@ -304,25 +305,25 @@ function sendsms($servicename, $tonumber, $smstext, $senddate, $sendtime)
 		return false;
 	else {
 		/*$senddate = datetimelocal("Y-m-d");
-					$sendtime = datetimelocal("H:i");
-					
-					$accountid = "20010262";
-					$accountpassword = "fcmy7q";
-					$tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10);
-					$smstext = substr($smstext, 0, 159);
-				
-					$targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?";
-					$targeturl .= "user=".$accountid;
-					$targeturl .= "&pwd=".$accountpassword;
-					$targeturl .= "&senderid=RELYON";
-					$targeturl .= "&mobileno=".$tonumber;
-					$targeturl .= "&msgtext=".urlencode($smstext);
-					$targeturl .= "&priority=High";
-				
-					$response = file_get_contents($targeturl);
-					$splitdata = explode(",",$response);
-					$messageid = $splitdata[0];
-					$message = "Sent Successfully. [Message ID = ".$messageid."]";*/
+																																	  $sendtime = datetimelocal("H:i");
+																																	  
+																																	  $accountid = "20010262";
+																																	  $accountpassword = "fcmy7q";
+																																	  $tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10);
+																																	  $smstext = substr($smstext, 0, 159);
+																																  
+																																	  $targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?";
+																																	  $targeturl .= "user=".$accountid;
+																																	  $targeturl .= "&pwd=".$accountpassword;
+																																	  $targeturl .= "&senderid=RELYON";
+																																	  $targeturl .= "&mobileno=".$tonumber;
+																																	  $targeturl .= "&msgtext=".urlencode($smstext);
+																																	  $targeturl .= "&priority=High";
+																																  
+																																	  $response = file_get_contents($targeturl);
+																																	  $splitdata = explode(",",$response);
+																																	  $messageid = $splitdata[0];
+																																	  $message = "Sent Successfully. [Message ID = ".$messageid."]";*/
 
 		//Insert to SMS Logs Database
 		$query = "insert into `smslogs`(servicename, tonumber, smstext, senddate, sendtime)values('" . $servicename . "', '" . $tonumber . "', '" . $smstext . "', '" . $senddate . "', '" . $sendtime . "')";
@@ -340,35 +341,35 @@ function sendsmsforleads($servicename, $tonumber, $smstext, $senddate, $sendtime
 		return true;
 	} else {
 		/*$senddate = datetimelocal("Y-m-d");
-					$sendtime = datetimelocal("H:i");
-					
-					$accountid = "20010262";
-					$accountpassword = "fcmy7q";
-					$tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10);
-					$smstext = substr($smstext, 0, 159);
-				
-					$targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?";
-					$targeturl .= "user=".$accountid;
-					$targeturl .= "&pwd=".$accountpassword;
-					$targeturl .= "&senderid=RELYON";
-					$targeturl .= "&mobileno=".$tonumber;
-					$targeturl .= "&msgtext=".urlencode($smstext);
-					$targeturl .= "&priority=High";
-				
-					$response = file_get_contents($targeturl);
-					$splitdata = explode(",",$response);
-					$messageid = $splitdata[0];
-					$message = "Sent Successfully. [Message ID = ".$messageid."]";*/
+																																	  $sendtime = datetimelocal("H:i");
+																																	  
+																																	  $accountid = "20010262";
+																																	  $accountpassword = "fcmy7q";
+																																	  $tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10);
+																																	  $smstext = substr($smstext, 0, 159);
+																																  
+																																	  $targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?";
+																																	  $targeturl .= "user=".$accountid;
+																																	  $targeturl .= "&pwd=".$accountpassword;
+																																	  $targeturl .= "&senderid=RELYON";
+																																	  $targeturl .= "&mobileno=".$tonumber;
+																																	  $targeturl .= "&msgtext=".urlencode($smstext);
+																																	  $targeturl .= "&priority=High";
+																																  
+																																	  $response = file_get_contents($targeturl);
+																																	  $splitdata = explode(",",$response);
+																																	  $messageid = $splitdata[0];
+																																	  $message = "Sent Successfully. [Message ID = ".$messageid."]";*/
 
 
 		/*	$file = $_SERVER['DOCUMENT_ROOT'].'/LMS/filescreated/'.'SMS.txt';
-					 $current = stripslashes($smstext)."\r\n";
-					 $fp = fopen($file,'a+');
-					 if($fp)
-						 fwrite($fp,$current);
-					 fclose($fp);
-					 
-					 //echo('here');exit;*/
+																																	   $current = stripslashes($smstext)."\r\n";
+																																	   $fp = fopen($file,'a+');
+																																	   if($fp)
+																																		   fwrite($fp,$current);
+																																	   fclose($fp);
+																																	   
+																																	   //echo('here');exit;*/
 		//Insert to SMS Logs Database
 		$query = "insert into `smslogs`(servicename, tonumber, smstext, senddate, sendtime,leadid,smssentby)values('" . $servicename . "', '" . $tonumber . "', '" . addslashes($smstext) . "', '" . $senddate . "', '" . $sendtime . "','" . $leadid . "','" . $sentby . "')";
 		$result = runmysqlquery($query);
@@ -765,29 +766,29 @@ function getshowmcapermissionvalue()
 
 	switch ($cookie_usertype) {
 		case 'Dealer': {
-				$query = "select showmcacompanies,branch from dealers where id = '" . $referenceid . "';";
-				$resultfetch = runmysqlqueryfetch($query);
-				$showmcacompanies = $resultfetch['showmcacompanies'];
-				$branch = $resultfetch['branch'];
-			}
+			$query = "select showmcacompanies,branch from dealers where id = '" . $referenceid . "';";
+			$resultfetch = runmysqlqueryfetch($query);
+			$showmcacompanies = $resultfetch['showmcacompanies'];
+			$branch = $resultfetch['branch'];
+		}
 			break;
 		case 'Sub Admin': {
-				$query = "select showmcacompanies from lms_subadmins where id = '" . $referenceid . "';";
-				$resultfetch = runmysqlqueryfetch($query);
-				$branch = '';
-				$showmcacompanies = $resultfetch['showmcacompanies'];
-			}
+			$query = "select showmcacompanies from lms_subadmins where id = '" . $referenceid . "';";
+			$resultfetch = runmysqlqueryfetch($query);
+			$branch = '';
+			$showmcacompanies = $resultfetch['showmcacompanies'];
+		}
 			break;
 		case 'Reporting Authority': {
-				$query = "select showmcacompanies,branch from lms_managers where id = '" . $referenceid . "';";
-				$resultfetch = runmysqlqueryfetch($query);
-				$showmcacompanies = $resultfetch['showmcacompanies'];
-				$branch = $resultfetch['branch'];
-			}
+			$query = "select showmcacompanies,branch from lms_managers where id = '" . $referenceid . "';";
+			$resultfetch = runmysqlqueryfetch($query);
+			$showmcacompanies = $resultfetch['showmcacompanies'];
+			$branch = $resultfetch['branch'];
+		}
 			break;
 		case 'Admin': {
-				$showmcacompanies = 'yes';
-			}
+			$showmcacompanies = 'yes';
+		}
 			break;
 	}
 	return $showmcacompanies . '^' . $branch . '^' . $query;
@@ -805,4 +806,340 @@ function isurl($url)
 {
 	return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
 }
+
+
+// function generate_pdf()
+// {
+// 	ini_set('memory_limit', '2048M');
+
+// 	require ('../pdfbillgeneration/tcpdf.php');
+
+// 	$id = $_POST['id'];
+// 	$contactperson = $_POST['contactperson'];
+// 	$address = $_POST['address'];
+// 	$stdcode = $_POST['stdcode'];
+// 	$phone = $_POST['phone'];
+// 	$cell = $_POST['cell'];
+// 	$emailid = $_POST['emailid'];
+// 	$gstin = $_POST['gstin'];
+// 	$remarks = $_POST['remarks'];
+// 	$productNames = explode(',', $_POST['productnames']);
+// 	$purchaseTypes = explode(',', $_POST['purchasetypes']);
+// 	$usageTypes = explode(',', $_POST['usagetypes']);
+// 	$amounts = explode(',', $_POST['amounts']);
+
+// 	// Sanitize input
+// 	$leadid = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+// 	$gstin = filter_input(INPUT_POST, 'gstin', FILTER_SANITIZE_STRING);
+// 	$remarks = filter_input(INPUT_POST, 'remarks', FILTER_SANITIZE_STRING);
+
+// 	$quoteQuery = "SELECT * FROM lms_quote ORDER BY id DESC LIMIT 1";
+// 	$quoteResult = runmysqlqueryfetch($quoteQuery);
+// 	$leadid = $quoteResult['leadid'];
+
+
+// 	// Fetch lead details from database
+// 	$leadQuery = "SELECT * FROM leads WHERE id = '$leadid'";
+// 	$leadResult = runmysqlqueryfetch($leadQuery);
+// 	if (!$leadResult) {
+// 		die('Lead not found');
+// 	}
+
+// 	// Fetch dealer details from database
+// 	$dealerid = $leadResult['dealerid'];
+// 	$dealerQuery = "SELECT `dlrname`, `dlrcell`, `dlremail` FROM dealers WHERE id = '$dealerid'";
+// 	$dealerResult = runmysqlqueryfetch($dealerQuery);
+// 	if (!$dealerResult) {
+// 		die('Dealer not found');
+// 	}
+// 	// Generate quote details
+// 	$quotedate = date("d-m-Y");
+// 	$year = date("Y");
+// 	$autoIncrementValue = $quoteResult['id'] + 1;
+// 	$quotenumber = "RSL" . $year . "Q" . str_pad($autoIncrementValue, 2, "0", STR_PAD_LEFT);
+// 	$validdate = date("d-m-Y", strtotime("+14 days"));
+// 	$company = $leadResult['company'];
+// 	$emailid = $leadResult['emailid'];
+// 	$customername = $leadResult['name'];
+// 	$cell = $leadResult['cell'];
+// 	$address = $leadResult['address'];
+// 	$extvname = $dealerResult['dlrname'];
+// 	$extvcell = $dealerResult['dlrcell'];
+// 	$extvemailid = $dealerResult['dlremail'];
+
+// 	// Prepare product rows
+// 	$products = json_decode($_POST['products'], true);
+// 	$productRows = '';
+// 	foreach ($products as $index => $product) {
+// 		$productRows .= "<tr>
+//                     <td>" . ($index + 1) . "</td>
+//                     <td>{$product['productName']}</td>
+//                     <td>{$product['purchaseType']}</td>
+//                     <td>{$product['usageType']}</td>
+//                     <td>" . number_format($product['amount'], 2) . "</td>
+//                 </tr>";
+// 	}
+
+// 	// Load template file
+// 	$template = file_get_contents('../pdfbillgeneration/template.php');
+
+// 	// Replace placeholders with actual data
+// 	$template = str_replace('##quotedate##', $quotedate, $template);
+// 	$template = str_replace('##gstin##', $gstin, $template);
+// 	$template = str_replace('##quotenumber##', $quotenumber, $template);
+// 	$template = str_replace('##validdate##', $validdate, $template);
+// 	$template = str_replace('##company##', $company, $template);
+// 	$template = str_replace('##emailid##', $emailid, $template);
+// 	$template = str_replace('##customername##', $customername, $template);
+// 	$template = str_replace('##cell##', $cell, $template);
+// 	$template = str_replace('##address##', $address, $template);
+// 	$template = str_replace('##extvname##', $extvname, $template);
+// 	$template = str_replace('##extvcell##', $extvcell, $template);
+// 	$template = str_replace('##extvemailid##', $extvemailid, $template);
+// 	$template = str_replace('##productRows##', $productRows, $template);
+
+// 	// Create TCPDF instance
+// 	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+// 	$pdf->SetCreator(PDF_CREATOR);
+// 	$pdf->SetAuthor('Your Name');
+// 	$pdf->SetTitle('Generated PDF');
+// 	$pdf->SetSubject('Form Data');
+// 	$pdf->SetKeywords('TCPDF, PDF, form, data');
+
+// 	// Add a page
+// 	$pdf->AddPage();
+
+// 	// Write the HTML content
+// 	$pdf->writeHTML($template, true, false, true, false, '');
+
+// 	// Output the PDF (force download)
+// 	$pdf->Output('generated_pdf.pdf', 'I');
+// }
+
+
+
+// function generate_pdf()
+// {
+// 	ini_set('memory_limit', '2048M');
+// 	require ('../pdfbillgeneration/tcpdf.php');
+
+// 	// Sanitize input
+// 	$leadid = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+// 	$gstin = filter_input(INPUT_POST, 'gstin', FILTER_SANITIZE_STRING);
+// 	$remarks = filter_input(INPUT_POST, 'remarks', FILTER_SANITIZE_STRING);
+
+
+// 	$id = $_POST['id'];
+// 	$contactperson = $_POST['contactperson'];
+// 	$address = $_POST['address'];
+// 	$stdcode = $_POST['stdcode'];
+// 	$phone = $_POST['phone'];
+// 	$cell = $_POST['cell'];
+// 	$emailid = $_POST['emailid'];
+// 	$gstin = $_POST['gstin'];
+// 	$remarks = $_POST['remarks'];
+
+// 	// Fetch lead details from database
+// 	$leadQuery = "SELECT * FROM leads WHERE id = '$leadid'";
+// 	$leadResult = runmysqlqueryfetch($leadQuery);
+// 	if (!$leadResult) {
+// 		die('Lead not found');
+// 	}
+
+// 	// Fetch dealer details from database
+// 	$dealerid = $leadResult['dealerid'];
+// 	$dealerQuery = "SELECT `dlrname`, `dlrcell`, `dlremail` FROM dealers WHERE id = '$dealerid'";
+// 	$dealerResult = runmysqlqueryfetch($dealerQuery);
+// 	if (!$dealerResult) {
+// 		die('Dealer not found');
+// 	}
+
+// 	// Generate quote details
+// 	$quotedate = date("d-m-Y");
+// 	$year = date("Y");
+// 	$quotenumber = "RSL" . $year . "Q" . str_pad($quoteResult['id'] + 1, 2, "0", STR_PAD_LEFT);
+// 	$validdate = date("d-m-Y", strtotime("+14 days"));
+// 	$company = $leadResult['company'];
+// 	$emailid = $leadResult['emailid'];
+// 	$customername = $leadResult['name'];
+// 	$cell = $leadResult['cell'];
+// 	$address = $leadResult['address'];
+// 	$extvname = $dealerResult['dlrname'];
+// 	$extvcell = $dealerResult['dlrcell'];
+// 	$extvemailid = $dealerResult['dlremail'];
+// 	// Fetch product details from lms_quote
+// 	$productQuery = "SELECT `productname`, `purchasetype`, `usagetype`, `amount` FROM lms_quote WHERE id = '{$quoteResult['id']}'";
+// 	$productResult = runmysqlqueryfetch($productQuery);
+// 	if (!$productResult) {
+// 		die('Product details not found');
+// 	}
+
+// 	$productNames = explode(',', $productResult['productname']);
+// 	$purchaseTypes = explode(',', $productResult['purchasetype']);
+// 	$usageTypes = explode(',', $productResult['usagetype']);
+// 	$amounts = explode(',', $productResult['amount']);
+
+
+// 	$productRows .= "<tr style='background-color: #CCCCCC;' margin-left:10px;>
+//     <td width='30%' colspan='3'>
+//         <div align='center'><strong>SL No</strong></div>
+//     </td>
+//     <td width='40%' colspan='3'>
+//         <div align='center'><strong>Description</strong></div>
+//     </td>
+//     <td width='30%' colspan='3'>
+//         <div align='center'><strong>Amount</strong></div>
+//     </td>
+// </tr>";
+
+// for ($i = 0; $i < count($productNames); $i++) {
+//     $productRows .= "<tr>
+//         <td colspan='3'>" . ($i + 1) . "</td>
+//         <td colspan='3'>{$productNames[$i]}, {$purchaseTypes[$i]}, {$usageTypes[$i]}</td>
+//         <td colspan='3'>" . number_format($amounts[$i], 2) . "</td>
+//     </tr>";
+// }
+
+
+// 	// Load template file
+// 	$template = file_get_contents('../pdfbillgeneration/template.php');
+
+// 	// Replace placeholders with actual data
+// 	$template = str_replace('##quotedate##', $quotedate, $template);
+// 	$template = str_replace('##gstin##', $gstin, $template);
+// 	$template = str_replace('##quotenumber##', $quotenumber, $template);
+// 	$template = str_replace('##validdate##', $validdate, $template);
+// 	$template = str_replace('##company##', $company, $template);
+// 	$template = str_replace('##emailid##', $emailid, $template);
+// 	$template = str_replace('##customername##', $customername, $template);
+// 	$template = str_replace('##cell##', $cell, $template);
+// 	$template = str_replace('##address##', $address, $template);
+// 	$template = str_replace('##extvname##', $extvname, $template);
+// 	$template = str_replace('##extvcell##', $extvcell, $template);
+// 	$template = str_replace('##extvemailid##', $extvemailid, $template);
+// 	$template = str_replace('##productRows##', $productRows, $template);
+
+// 	// Create TCPDF instance
+// 	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+// 	$pdf->SetCreator(PDF_CREATOR);
+// 	$pdf->SetAuthor('Your Name');
+// 	$pdf->SetTitle('Generated PDF');
+// 	$pdf->SetSubject('Form Data');
+// 	$pdf->SetKeywords('TCPDF, PDF, form, data');
+
+// 	// Add a page
+// 	$pdf->AddPage();
+
+// 	// Write the HTML content
+// 	$pdf->writeHTML($template, true, false, true, false, '');
+
+// 	// Output the PDF (force download)
+// 	$pdf->Output('generated_pdf.pdf', 'I');
+
+// }
+
+
+// function generate_pdf()
+// {
+// 	ini_set('memory_limit', '2048M');
+// 	require ('../pdfbillgeneration/tcpdf.php');
+
+// 	// Sanitize input (you can remove this part if you're already sanitizing inputs before calling this function)
+// 	$leadid = filter_var($id, FILTER_SANITIZE_NUMBER_INT);
+// 	$gstin = filter_var($gstin, FILTER_SANITIZE_STRING);
+// 	$remarks = filter_var($remarks, FILTER_SANITIZE_STRING);
+
+
+
+// 	 echo $leadid;
+// 	// Fetch lead details from database
+// 	$leadQuery = "SELECT * FROM leads WHERE id = '$leadid'";
+// 	$leadResult = runmysqlqueryfetch($leadQuery);
+// 	if (!$leadResult) {
+// 		die('Lead not found');
+// 	}
+
+// 	// Fetch dealer details from database
+// 	$dealerid = $leadResult['dealerid'];
+// 	$dealerQuery = "SELECT `dlrname`, `dlrcell`, `dlremail` FROM dealers WHERE id = '$dealerid'";
+// 	$dealerResult = runmysqlqueryfetch($dealerQuery);
+// 	if (!$dealerResult) {
+// 		die('Dealer not found');
+// 	}
+
+// 	// Generate quote details
+// 	$quotedate = date("d-m-Y");
+// 	$year = date("Y");
+// 	$quotenumber = "RSL" . $year . "Q" . str_pad($quoteResult['id'] + 1, 2, "0", STR_PAD_LEFT);
+// 	$validdate = date("d-m-Y", strtotime("+14 days"));
+// 	$company = $leadResult['company'];
+// 	$emailid = $leadResult['emailid'];
+// 	$customername = $leadResult['name'];
+// 	$cell = $leadResult['cell'];
+// 	$address = $leadResult['address'];
+// 	$extvname = $dealerResult['dlrname'];
+// 	$extvcell = $dealerResult['dlrcell'];
+// 	$extvemailid = $dealerResult['dlremail'];
+// 	// Fetch product details from lms_quote
+// 	$productNames = $productName;
+// 	$purchaseTypes = $purchaseType;
+// 	$usageTypes = $usageType;
+// 	$amounts = $amount;
+
+// 	$productRows = "";
+// 	$productRows .= "<tr style='background-color: #CCCCCC;'>
+//         <td><strong>SL No</strong></td>
+//         <td><strong>Description</strong></td>
+//         <td><strong>Amount</strong></td>
+//     </tr>";
+
+// 	for ($i = 0; $i < count($productNames); $i++) {
+// 		$productRows .= "<tr>
+//             <td>" . ($i + 1) . "</td>
+//             <td>{$productNames[$i]}, {$purchaseTypes[$i]}, {$usageTypes[$i]}</td>
+//             <td>" . number_format($amounts[$i], 2) . "</td>
+//         </tr>";
+// 	}
+
+// 	// Load template file
+// 	$template = file_get_contents('../pdfbillgeneration/template.php');
+
+// 	// Replace placeholders with actual data
+// 	$template = str_replace('##quotedate##', $quotedate, $template);
+// 	$template = str_replace('##gstin##', $gstin, $template);
+// 	$template = str_replace('##quotenumber##', $quotenumber, $template);
+// 	$template = str_replace('##validdate##', $validdate, $template);
+// 	$template = str_replace('##company##', $company, $template);
+// 	$template = str_replace('##emailid##', $emailid, $template);
+// 	$template = str_replace('##customername##', $customername, $template);
+// 	$template = str_replace('##cell##', $cell, $template);
+// 	$template = str_replace('##address##', $address, $template);
+// 	$template = str_replace('##extvname##', $extvname, $template);
+// 	$template = str_replace('##extvcell##', $extvcell, $template);
+// 	$template = str_replace('##extvemailid##', $extvemailid, $template);
+// 	$template = str_replace('##productRows##', $productRows, $template);
+
+// 	// Create TCPDF instance
+// 	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+// 	$pdf->SetCreator(PDF_CREATOR);
+// 	$pdf->SetAuthor('Your Name');
+// 	$pdf->SetTitle('Generated PDF');
+// 	$pdf->SetSubject('Form Data');
+// 	$pdf->SetKeywords('TCPDF, PDF, form, data');
+
+// 	// Add a page
+// 	$pdf->AddPage();
+
+// 	// Write the HTML content
+// 	$pdf->writeHTML($template, true, false, true, false, '');
+
+// 	// Output the PDF (force download)
+// 	$pdf->Output('generated_pdf.pdf', 'I');
+// }
+
+
+
+
+
+
 ?>

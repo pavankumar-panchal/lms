@@ -59,12 +59,6 @@ foreach ($products as $index => $product) {
 
 $template = file_get_contents('send_quote.html');
 
-$pdfFilePath = '../ajax/generate_pdf.php';
-
-// Generate the PDF content
-ob_start();
-include ($pdfFilePath);
-$pdfContent = ob_get_clean();
 
 $template = str_replace('##quotedate##', $quotedate, $template);
 $template = str_replace('##gstin##', $gstin, $template);

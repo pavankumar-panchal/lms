@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+</head>
+
+<body>
+    <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0">
+        <tr>
+            <td colspan="3">
+                <table width="100%" border="0" cellspacing="0" cellpadding="1">
+                    <tr>
+                        <td width="73%" style="text-align:left">
+                            <strong>Date: ##Date##</strong><br />
+                            <strong>Relyon Softech Ltd</strong><br />
+                            <font color="#333333"><strong>Leaders in Payroll, Taxation and Accounting Domain</strong></font><br />
+                            No. 73, Shreelekha Complex, WOC Road, Bangalore :560 086<br />
+                            <!-- <strong>Phone</strong>: 080-23002100 | <strong>Telefax</strong>: 080-23193552<br/> -->
+                            <strong>Email</strong>: info@relyonsoft.com | www.relyonsoft.com<br />
+                            <strong>GSTIN</strong>: 29AABCR7796N1ZC | <strong>CIN No:</strong>
+                            U72200KA2000PLC027572<br />
+                            <strong>PAN</strong>: AABCR7796N | <strong>State Code:</strong> 29
+                        </td>
+                        <td width="27%" style="text-align:right;" valign="middle">
+                            <img src="../images/relyon-logo.jpg" width="120" height="40" border="0" valign="middle" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align:center">
+                <font color=""><strong>Tax Invoice</strong></font>
+            </td>
+        </tr>
+        <tr bgcolor="#CCCCCC">
+            <td width="60%" colspan="2">
+                <div align="left"><strong>Customer Details</strong></div>
+            </td>
+            <td width="40%">
+                <div align="left"><strong>Seller Details</strong></div>
+            </td>
+        </tr>
+        <tr>
+            <td width="60%" colspan="2" style="text-align:left"><strong>Customer GSTIN:</strong> ##GSTIN##</td>
+            <td style="text-align:left" width="40%"><strong>Quotation Number:</strong> ##QUOTENUMBER##</td>
+
+        </tr>
+        <tr>
+            <td width="60%" colspan="2" style="text-align:left"><strong>Customer Name:</strong> ##NAME##</td>
+            <td style="text-align:left" width="40%"><strong>Quote Valid Until:</strong> ##Quote##</td>
+
+        </tr>
+        <tr>
+            <td width="60%" colspan="2" style="text-align:left"><strong>Prn Name:</strong> ##PRN##</td>
+            <td style="text-align:left" width="40%"><strong>Mtg Extv:</strong> ##NAME##</td>
+        </tr>
+        <tr>
+            <td width="60%" colspan="2" style="text-align:left"><strong>Customer Place:</strong> ##PLACE##</td>
+            <td style="text-align:left" width="40%"><strong>Mobile:</strong> ##MOBILE##</td>
+
+        </tr>
+        <tr>
+            <td width="30%" colspan="1"  style="text-align:left"><strong>Email:</strong> ##EMAIL## 
+            </td>
+            <td><strong>Mobile:</strong> ##MOBILE## 
+            </td>
+            <td style="text-align:left" width="40%"><strong>Email:</strong> ##Email##</td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <table width="100%" border="1" cellspacing="0" cellpadding="4">
+                    <tr bgcolor="#CCCCCC">
+                        <td><strong>SL NO</strong></td>
+                        <td><strong>Description</strong></td>
+                        <td><strong>Amount</strong></td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td>1</td>
+                        <td>Accounting Software  <br>  Purchase Type: ##New## / Usage Type: ##Singleuser##</td>
+                        <td>100</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Product Name  <br>  Purchase Type:##Purchase Type## / Usage Type : ##Usage Type##</td>
+                        <td>200</td>
+                    </tr>
+
+
+                    
+                    
+                </table>
+            </td>
+        </tr>
+                
+        <tr>
+            <td colspan="2" style="text-align:left" valign="top">
+                <table width="100%" border="0" cellspacing="0" cellpadding="2">
+                    <!-- Add any additional rows if needed -->
+                </table>
+            </td>
+            <td style="text-align:left" width="40%">
+                <div align="center">
+                    <font color="">For <strong>RELYON SOFTECH LTD</strong></font><br />
+                    <br />
+                    ##GENERATEDBY##
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
+
+
+
+
+include ("../functions/phpfunctions.php");
+
+ini_set('memory_limit', '2048M');
+require ('../pdfbillgeneration/tcpdf.php');
+
+$formData = json_decode($_POST['formData'], true);
+
+$leadid = $formData['id'];
+$productNames = $formData['productName'];
+$purchaseTypes = $formData['purchaseType'];
+$usageTypes = $formData['usageType'];
+$amounts = $formData['amount'];
+$gstin = $formData['gstin'];
+$remarks = $formData['remarks'];
+
+$leadQuery = "SELECT * FROM leads WHERE id = '$leadid'";
+$leadResult = runmysqlqueryfetch($leadQuery);
+if (!$leadResult) {
+    die('Lead not found');
+}
+
+// Fetch dealer details from database
+$dealerid = $leadResult['dealerid'];
+$dealerQuery = "SELECT `dlrname`, `dlrcell`, `dlremail` FROM dealers WHERE id = '$dealerid'";
+$dealerResult = runmysqlqueryfetch($dealerQuery);
+if (!$dealerResult) {
+    die('Dealer not found');
+}
+
+// Generate quote details
+$quotedate = date("d-m-Y");
+$year = date("Y");
+$quotenumber = "RSL" . $year . "Q" . str_pad($quoteResult['id'] + 1, 2, "0", STR_PAD_LEFT);
+$validdate = date("d-m-Y", strtotime("+14 days"));
+$company = $leadResult['company'];
+$emailid = $leadResult['emailid'];
+$customername = $leadResult['name'];
+$cell = $leadResult['cell'];
+$address = $leadResult['address'];
+$extvname = $dealerResult['dlrname'];
+$extvcell = $dealerResult['dlrcell'];
+$extvemailid = $dealerResult['dlremail'];
+// Fetch product details from lms_quote
+$productNames = $productName;
+$purchaseTypes = $purchaseType;
+$usageTypes = $usageType;
+$amounts = $amount;
+
+$productRows = "";
+$productRows .= "<tr style='background-color: #CCCCCC;'>
+        <td><strong>SL No</strong></td>
+        <td><strong>Description</strong></td>
+        <td><strong>Amount</strong></td>
+    </tr>";
+
+for ($i = 0; $i < count($productNames); $i++) {
+    $productRows .= "<tr>
+            <td>" . ($i + 1) . "</td>
+            <td>{$productNames[$i]}, {$purchaseTypes[$i]}, {$usageTypes[$i]}</td>
+            <td>" . number_format($amounts[$i], 2) . "</td>
+        </tr>";
+}
+
+// Load template file
+$template = file_get_contents('../pdfbillgeneration/template.php');
+
+// Replace placeholders with actual data
+$template = str_replace('##quotedate##', $quotedate, $template);
+$template = str_replace('##gstin##', $gstin, $template);
+$template = str_replace('##quotenumber##', $quotenumber, $template);
+$template = str_replace('##validdate##', $validdate, $template);
+$template = str_replace('##company##', $company, $template);
+$template = str_replace('##emailid##', $emailid, $template);
+$template = str_replace('##customername##', $customername, $template);
+$template = str_replace('##cell##', $cell, $template);
+$template = str_replace('##address##', $address, $template);
+$template = str_replace('##extvname##', $extvname, $template);
+$template = str_replace('##extvcell##', $extvcell, $template);
+$template = str_replace('##extvemailid##', $extvemailid, $template);
+$template = str_replace('##productRows##', $productRows, $template);
+
+// Create TCPDF instance
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Your Name');
+$pdf->SetTitle('Generated PDF');
+$pdf->SetSubject('Form Data');
+$pdf->SetKeywords('TCPDF, PDF, form, data');
+
+// Add a page
+$pdf->AddPage();
+
+// Write the HTML content
+$pdf->writeHTML($template, true, false, true, false, '');
+
+// Output the PDF (force download)
+$pdf->Output('generated_pdf.pdf', 'I');

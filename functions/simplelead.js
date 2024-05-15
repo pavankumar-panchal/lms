@@ -1,27 +1,74 @@
 // JavaScript Document
 
-function checkForMatchingRows() {
-  var xmlhttp = new XMLHttpRequest();
+// function checkForMatchingRows() {
+//   var xmlhttp = new XMLHttpRequest();
 
-  xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-      if (xmlhttp.status === 200) {
-        if (xmlhttp.responseText.trim() !== "No rows found") {
-          // If a match is found, display an alert
-          alert(xmlhttp.responseText);
-        }
-      }
-    }
-  };
+//   xmlhttp.onreadystatechange = function () {
+//     if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+//       if (xmlhttp.status === 200) {
+//         if (xmlhttp.responseText.trim() !== "No rows found") {
+//           // If a match is found, display an alert
+//           alert(xmlhttp.responseText);
+//         }
+//       }
+//     }
+//   };
 
-  xmlhttp.open("GET", "../ind.php", true);
-  xmlhttp.send();
-}
+//   xmlhttp.open("GET", "../ind.php", true);
+//   xmlhttp.send();
+// }
 
-// Call the function every 20 seconds (adjust as needed)
-setInterval(checkForMatchingRows, 20000); // 20 seconds
+// // Call the function every 20 seconds (adjust as needed)
+// setInterval(checkForMatchingRows, 20000); // 20 seconds
+// **************************************************
+
+// quotation start
+// Function to add a new product row
+
+// function generate_pdf() {
+//   var form = document.getElementById("quoteForm");
+//   var id = document.getElementById("hiddenid").value;
+//   var productName = document.getElementsByName("productName[]");
+//   var purchaseType = document.getElementsByName("purchaseType[]");
+//   var usageType = document.getElementsByName("usageType[]");
+//   var amount = document.getElementsByName("amount[]");
+//   var gstin = document.getElementById("gstin").value;
+//   var remarks = document.getElementById("remarks").value;
+
+//   // Create an object to hold the form data
+//   var formData = {
+//     id: id,
+//     productName: [],
+//     purchaseType: [],
+//     usageType: [],
+//     amount: [],
+//     gstin: gstin,
+//     remarks: remarks,
+//   };
+
+//   // Loop through the input fields and add their values to the formData object
+//   for (var i = 0; i < productName.length; i++) {
+//     formData.productName.push(productName[i].value);
+//     formData.purchaseType.push(purchaseType[i].value);
+//     formData.usageType.push(usageType[i].value);
+//     formData.amount.push(amount[i].value);
+//   }
+//   // Add formData to a hidden input field in the form
+//   var formDataInput = document.createElement("input");
+//   formDataInput.setAttribute("type", "hidden");
+//   formDataInput.setAttribute("name", "formData");
+//   formDataInput.setAttribute("value", JSON.stringify(formData));
+//   form.appendChild(formDataInput);
+
+//   alert(JSON.stringify(formData));
+
+//   form.action = "../ajax/generate_pdf.php";
+//   form.method = "POST";
+//   form.target = "_blank";
+//   form.submit();
+// }
+
 $(document).ready(function () {
-  // Function to add a new product row
   function addProductRow() {
     var rowCount = $("#adddescriptionrows tr").length;
     var newRow =
@@ -37,7 +84,6 @@ $(document).ready(function () {
       "</tr>";
     $("#adddescriptionrows").append(newRow);
   }
-
   // Function to remove the product row
   function removeProductRow(anchor) {
     var rowCount = $("#adddescriptionrows tr").length;
@@ -63,6 +109,9 @@ $(document).ready(function () {
     removeProductRow(this);
   });
 });
+
+// Quotation END
+// ************************
 
 var myValue = "";
 var fieldlength = "";
@@ -120,7 +169,6 @@ function getmynumber() {
   });
 }
 
-
 function insertAtCursor(myField) {
   //IE support
   if ($("#mynumber").is(":checked") == true) {
@@ -161,7 +209,6 @@ function insertAtCursor(myField) {
     }
   }
 }
-
 
 function griddata(startlimit) {
   $("#gridprocess").html(processing());
@@ -209,8 +256,6 @@ function griddata(startlimit) {
     },
   });
 }
-
-
 
 function filtering(command) {
   var form = $("#filterform");
@@ -428,10 +473,8 @@ function filtering(command) {
 function resetForm() {
   var form = document.getElementById("quoteForm");
   form.reset();
-  $("#adddescriptionrows tr").not(':first').remove(); // Remove all rows except the first one
+  $("#adddescriptionrows tr").not(":first").remove(); // Remove all rows except the first one
 }
-
-
 
 function gridtoform(id) {
   resetForm();
@@ -601,17 +644,10 @@ function gridtoform(id) {
   });
 }
 
-
-
-
-
-
 function formsubmited(command) {
   $("#tabgroupgridh2").trigger("click");
   window.setTimeout(mydemovalue, 3000);
 }
-
-
 
 function mydemovalue() {
   //var td = $("td:contains(Demo Given)");
@@ -906,7 +942,6 @@ function followuptoform(followupid) {
   }
 }
 
-//
 function followuptoform(followupid) {
   var passdata =
     "&submittype=followuptoform&followupid=" +
@@ -1232,93 +1267,9 @@ function send_quote() {
   // reset the product form
 }
 
-// function send_quote() {
-//   var contactperson = $("#contactperson").val();
-//   var address = $("#address").val();
-//   var stdcode = $("#stdcode").val();
-//   var phone = $("#phone").val();
-//   var cell = $("#cell").val();
-//   var emailid = $("#emailid").val();
-//   var gstin = $("#gstin").val();
-//   var productNames = [];
-//   var purchaseTypes = [];
-//   var usageTypes = [];
-//   var amounts = [];
-//   var remarks = $("#remarks").val();
-
-//   $("input[name='productName[]']").each(function () {
-//     productNames.push($(this).val());
-//   });
-
-//   $("select[name='purchaseType[]']").each(function () {
-//     purchaseTypes.push($(this).val());
-//   });
-
-//   $("select[name='usageType[]']").each(function () {
-//     usageTypes.push($(this).val());
-//   });
-
-//   $("input[name='amount[]']").each(function () {
-//     amounts.push($(this).val());
-//   });
-
-//   var id = $("#hiddenid").val();
-
-//   var passdata =
-//     // "submittype=send_quote" +
-//     "&id=" +
-//     encodeURIComponent(id) +
-//     "&contactperson=" +
-//     contactperson +
-//     "&address=" +
-//     address +
-//     "&stdcode=" +
-//     stdcode +
-//     "&phone=" +
-//     phone +
-//     "&cell=" +
-//     cell +
-//     "&emailid=" +
-//     emailid +
-//     "&gstin=" +
-//     gstin +
-//     "&productNames=" +
-//     productNames.join(",") +
-//     "&purchaseTypes=" +
-//     purchaseTypes.join(",") +
-//     "&usageTypes=" +
-//     usageTypes.join(",") +
-//     "&amounts=" +
-//     amounts.join(",") +
-//     "&remarks=" +
-//     remarks +
-//     "&dummy=" +
-//     Math.floor(Math.random() * 10230000000);
-// alert(passdata);
-//   var queryString = "../mailinvoice/send_quote.php";
-//   // var queryString = "../testphpmailer.php";
-//   ajaxobjext59 = $.ajax({
-//     type: "POST",
-//     url: queryString,
-//     data: passdata,
-//     cache: false,
-//     success: function (response, status) {
-//       if (response == "Thinking to redirect") {
-//         window.location = "../logout.php";
-//         return false;
-//       }
-//     },
-//   });
-// }
-
-
-
-
 function convertToSingleWord(value) {
-  return value.replace(/\s+/g, ''); // Remove all white spaces
+  return value.replace(/\s+/g, ""); // Remove all white spaces
 }
-
-
 
 function quote_generate() {
   var contactperson = $("#contactperson");
@@ -1349,7 +1300,6 @@ function quote_generate() {
     return false;
   }
 
-
   $("input[name='productName[]']").each(function (index) {
     var productName = $(this).val();
     var purchaseType = $("select[name='purchaseType[]']").eq(index).val();
@@ -1362,18 +1312,6 @@ function quote_generate() {
     usageTypes.push(convertToSingleWord(usageType));
     amounts.push(amount);
   });
-
-  // $("input[name='productName[]']").each(function (index) {
-  //   var productName = $(this).val();
-  //   var purchaseType = $("select[name='purchaseType[]']").eq(index).val();
-  //   var usageType = $("select[name='usageType[]']").eq(index).val();
-  //   var amount = $("input[name='amount[]']").eq(index).val();
-
-  //   productNames.push(productName);
-  //   purchaseTypes.push(purchaseType);
-  //   usageTypes.push(usageType);
-  //   amounts.push(amount);
-  // });
 
   if (productNames.length === 0) {
     error.html(errormessage("Please enter at least one product."));
@@ -1430,11 +1368,6 @@ function quote_generate() {
     } else if (checkemail(emailid.val()) == false) {
       error.html(errormessage("Please Enter a Valid Emailid."));
       $("#emailid").focus();
-      return false;
-    } else if (confirmcheck.is(":checked") == false) {
-      error.html(
-        errormessage("Please Confirm the Check Box to send quotation.")
-      );
       return false;
     } else {
       error.html("");
@@ -1509,375 +1442,7 @@ function quote_generate() {
       });
     }
   }
-  // reset form 
-  // resetForm();
-
 }
-
-// function quote_generate() {
-//   var contactperson = $("#contactperson");
-//   var address = $("#address");
-//   var stdcode = $("#stdcode");
-//   var phone = $("#phone");
-//   var cell = $("#cell");
-//   var emailid = $("#emailid");
-//   var gstin = $("#gstin");
-//   var productNames = []; // Array to store product names
-//   var purchaseTypes = []; // Array to store purchase types
-//   var usageTypes = []; // Array to store usage types
-//   var amounts = []; // Array to store amounts
-//   var remarks = $("#remarks");
-//   var error = $("#messagebox2");
-//   var confirmcheck = $("#saveconfirm");
-
-//   // GSTIN validation regex
-//   var gstinRegex =
-//     /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9]{1}$/;
-
-//   if (gstin.val() == "") {
-//     error.html(errormessage("Please enter GSTIN."));
-//     gstin.focus();
-//     return false;
-//   } else if (!gstinRegex.test(gstin.val())) {
-//     error.html(errormessage("Invalid GSTIN."));
-//     gstin.focus();
-//     return false;
-//   }
-
-//   // Iterate over each row of products
-//   $("input[name='productName[]']").each(function (index) {
-//     var productName = $(this).val();
-//     var purchaseType = $("select[name='purchasetype[]']").eq(index).val();
-//     var usageType = $("select[name='usagetype[]']").eq(index).val();
-//     var amount = $("input[name='amount[]']").eq(index).val();
-
-//     // Push the product data to the respective arrays
-//     productNames.push(productName);
-//     purchaseTypes.push(purchaseType);
-//     usageTypes.push(usageType);
-//     amounts.push(amount);
-//   });
-
-//   // Check if any product fields are empty
-//   if (productNames.length === 0) {
-//     error.html(errormessage("Please enter at least one product."));
-//     return false;
-//   }
-
-//   // Check if Remarks is empty
-//   if (remarks.val() == "") {
-//     error.html(errormessage("Please enter Remarks."));
-//     remarks.focus();
-//     return false;
-//   }
-
-//   // Check if other fields are empty
-//   if (
-//     contactperson.val() == "" &&
-//     address.val() == "" &&
-//     stdcode.val() == "" &&
-//     phone.val() == "" &&
-//     cell.val() == "" &&
-//     emailid.val() == "" &&
-//     $("#id").html() == ""
-//   ) {
-//     error.html(errormessage("Please Select a Lead First"));
-//     return false;
-//   } else {
-//     error.html("");
-//     if (stdcode.val() == "") {
-//       error.html(errormessage("Please Enter Std code"));
-//       $("#stdcode").focus();
-//       return false;
-//     } else if (validatestdcode(stdcode.val()) == false) {
-//       error.html(errormessage("Please Enter Valid Std code"));
-//       $("#stdcode").focus();
-//       return false;
-//     } else if (phone.val() == "") {
-//       error.html(errormessage("Please Enter Landline Number"));
-//       $("#phone").focus();
-//       return false;
-//     } else if (validatephone(phone.val()) == false) {
-//       error.html(errormessage("Please Enter Valid Phone Number."));
-//       $("#phone").focus();
-//       return false;
-//     } else if (cell.val() == "") {
-//       error.html(errormessage("Please Enter Cell Number"));
-//       $("#cell").focus();
-//       return false;
-//     } else if (!validatecell(cell.val())) {
-//       error.html(errormessage("Please Enter Valid cell Number."));
-//       $("#cell").focus();
-//       return false;
-//     } else if (emailid.val() == "") {
-//       error.html(errormessage("Please Enter Emailid."));
-//       $("#emailid").focus();
-//       return false;
-//     } else if (checkemail(emailid.val()) == false) {
-//       error.html(errormessage("Please Enter a Valid Emailid."));
-//       $("#emailid").focus();
-//       return false;
-//     } else if (confirmcheck.is(":checked") == false) {
-//       error.html(
-//         errormessage("Please Confirm the Check Box to send quotation.")
-//       );
-//       return false;
-//     } else {
-//       error.html("");
-//       $("#messagebox2").html(processing());
-//       $("#msg_box").html("");
-//       var id = $("#hiddenid").val();
-
-//       var passdata =
-//         "submittype=quote_generate" +
-//         "&id=" +
-//         encodeURIComponent(id) +
-//         "&contactperson=" +
-//         contactperson.val() +
-//         "&address=" +
-//         address.val() +
-//         "&stdcode=" +
-//         stdcode.val() +
-//         "&phone=" +
-//         phone.val() +
-//         "&cell=" +
-//         cell.val() +
-//         "&emailid=" +
-//         emailid.val() +
-//         "&gstin=" +
-//         gstin.val() +
-//         "&productnames=" + joinWithCommas(productNames) +
-//         "&purchasetypes=" + joinWithCommas(purchaseTypes) +
-//         "&usagetypes=" + joinWithCommas(usageTypes) +
-//         "&amounts=" + joinWithCommas(amounts) +
-//         "&remarks=" +
-//         remarks.val() +
-//         "&dummy=" +
-//         Math.floor(Math.random() * 10230000000);
-
-//       var queryString = "../ajax/simplelead.php";
-//       ajaxobjext59 = $.ajax({
-//         type: "POST",
-//         url: queryString,
-//         data: passdata,
-//         cache: false,
-//         success: function (response, status) {
-//           if (response == "Thinking to redirect") {
-//             window.location = "../logout.php";
-//             return false;
-//           } else {
-//             $("#messagebox2").html("");
-//             var ajaxresponse = response.split("^");
-//             if (ajaxresponse[0] == "1") {
-//               $("#messagebox2").html(successmessage(ajaxresponse[1]));
-//               $("#smscell").html(cell.val());
-//               $("#newleadcell").val(cell.val());
-//               $("#hiddennewleadcell").val(cell.val());
-//               $("#newleademailid").val(emailid.val());
-//               $("#hiddennewleademailid").val(emailid.val());
-//               $("#newleadcontactperson").val(contactperson.val());
-//               $("#hiddennewleadcontact").val(contactperson.val());
-//               $("#prior-sms-error").html("");
-//               confirmcheck.attr("checked", false);
-//             } else {
-//               $("#messagebox2").html(scripterror());
-//             }
-//           }
-//         },
-//         error: function (a, b) {
-//           $("#messagebox2").html(scripterror());
-//         },
-//       });
-//     }
-//   }
-// }
-
-// // Function to join array elements with commas
-// function joinWithCommas(arr) {
-//   return arr.join(",");
-// }
-
-// function quote_generate() {
-//   var contactperson = $("#contactperson");
-//   var address = $("#address");
-//   var stdcode = $("#stdcode");
-//   var phone = $("#phone");
-//   var cell = $("#cell");
-//   var emailid = $("#emailid");
-//   var gstin = $("#gstin");
-//   var productNames = []; // Array to store product names
-//   var purchaseTypes = []; // Array to store purchase types
-//   var usageTypes = []; // Array to store usage types
-//   var amounts = []; // Array to store amounts
-//   var remarks = $("#remarks");
-//   var error = $("#messagebox2");
-//   var confirmcheck = $("#saveconfirm");
-
-//   // GSTIN validation regex
-//   var gstinRegex =
-//     /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9]{1}$/;
-
-//   if (gstin.val() == "") {
-//     error.html(errormessage("Please enter GSTIN."));
-//     gstin.focus();
-//     return false;
-//   } else if (!gstinRegex.test(gstin.val())) {
-//     error.html(errormessage("Invalid GSTIN."));
-//     gstin.focus();
-//     return false;
-//   }
-
-//   // Iterate over each row of products
-//   $("input[name='product_name[]']").each(function (index) {
-//     var productName = $(this).val();
-//     var purchaseType = $("select[name='purchase_type[]']").eq(index).val();
-//     var usageType = $("select[name='usage_type[]']").eq(index).val();
-//     var amount = $("input[name='amount[]']").eq(index).val();
-
-//     // Push the product data to the respective arrays
-//     productNames.push(productName);
-//     purchaseTypes.push(purchaseType);
-//     usageTypes.push(usageType);
-//     amounts.push(amount);
-//   });
-
-//   // Check if any product fields are empty
-//   if (productNames.length === 0) {
-//     error.html(errormessage("Please enter at least one product."));
-//     return false;
-//   }
-
-//   // Check if Remarks is empty
-//   if (remarks.val() == "") {
-//     error.html(errormessage("Please enter Remarks."));
-//     remarks.focus();
-//     return false;
-//   }
-
-//   // Check if other fields are empty
-//   if (
-//     contactperson.val() == "" &&
-//     address.val() == "" &&
-//     stdcode.val() == "" &&
-//     phone.val() == "" &&
-//     cell.val() == "" &&
-//     emailid.val() == "" &&
-//     $("#id").html() == ""
-//   ) {
-//     error.html(errormessage("Please Select a Lead First"));
-//     return false;
-//   } else {
-//     error.html("");
-//     if (stdcode.val() == "") {
-//       error.html(errormessage("Please Enter Std code"));
-//       $("#stdcode").focus();
-//       return false;
-//     } else if (validatestdcode(stdcode.val()) == false) {
-//       error.html(errormessage("Please Enter Valid Std code"));
-//       $("#stdcode").focus();
-//       return false;
-//     } else if (phone.val() == "") {
-//       error.html(errormessage("Please Enter Landline Number"));
-//       $("#phone").focus();
-//       return false;
-//     } else if (validatephone(phone.val()) == false) {
-//       error.html(errormessage("Please Enter Valid Phone Number."));
-//       $("#phone").focus();
-//       return false;
-//     } else if (cell.val() == "") {
-//       error.html(errormessage("Please Enter Cell Number"));
-//       $("#cell").focus();
-//       return false;
-//     } else if (!validatecell(cell.val())) {
-//       error.html(errormessage("Please Enter Valid cell Number."));
-//       $("#cell").focus();
-//       return false;
-//     } else if (emailid.val() == "") {
-//       error.html(errormessage("Please Enter Emailid."));
-//       $("#emailid").focus();
-//       return false;
-//     } else if (checkemail(emailid.val()) == false) {
-//       error.html(errormessage("Please Enter a Valid Emailid."));
-//       $("#emailid").focus();
-//       return false;
-//     } else if (confirmcheck.is(":checked") == false) {
-//       error.html(
-//         errormessage("Please Confirm the Check Box to send quotation.")
-//       );
-//       return false;
-//     } else {
-//       error.html("");
-//       $("#messagebox2").html(processing());
-//       $("#msg_box").html("");
-//       var id = $("#hiddenid").val();
-
-//       var passdata =
-//         "submittype=quote_generate" +
-//         "&id=" +
-//         encodeURIComponent(id) +
-//         "&contactperson=" +
-//         contactperson.val() +
-//         "&address=" +
-//         address.val() +
-//         "&stdcode=" +
-//         stdcode.val() +
-//         "&phone=" +
-//         phone.val() +
-//         "&cell=" +
-//         cell.val() +
-//         "&emailid=" +
-//         emailid.val() +
-//         "&gstin=" +
-//         gstin.val() +
-//         "&product_names=" +
-//         productNames.join(",") + // Separate product names by commas
-//         "&purchase_types=" +
-//         purchaseTypes.join(",") + // Separate purchase types by commas
-//         "&usage_types=" +
-//         usageTypes.join(",") + // Separate usage types by commas
-//         "&amounts=" +
-//         amounts.join(",") + // Separate amounts by commas
-//         "&remarks=" +
-//         remarks.val() +
-//         "&dummy=" +
-//         Math.floor(Math.random() * 10230000000);
-
-//       var queryString = "../ajax/simplelead.php";
-//       ajaxobjext59 = $.ajax({
-//         type: "POST",
-//         url: queryString,
-//         data: passdata,
-//         cache: false,
-//         success: function (response, status) {
-//           if (response == "Thinking to redirect") {
-//             window.location = "../logout.php";
-//             return false;
-//           } else {
-//             $("#messagebox2").html("");
-//             var ajaxresponse = response.split("^");
-//             if (ajaxresponse[0] == "1") {
-//               $("#messagebox2").html(successmessage(ajaxresponse[1]));
-//               $("#smscell").html(cell.val());
-//               $("#newleadcell").val(cell.val());
-//               $("#hiddennewleadcell").val(cell.val());
-//               $("#newleademailid").val(emailid.val());
-//               $("#hiddennewleademailid").val(emailid.val());
-//               $("#newleadcontactperson").val(contactperson.val());
-//               $("#hiddennewleadcontact").val(contactperson.val());
-//               $("#prior-sms-error").html("");
-//               confirmcheck.attr("checked", false);
-//             } else {
-//               $("#messagebox2").html(scripterror());
-//             }
-//           }
-//         },
-//         error: function (a, b) {
-//           $("#messagebox2").html(scripterror());
-//         },
-//       });
-//     }
-//   }
-// }
 
 function gstin(gstin) {
   // GSTIN regular expression pattern
@@ -3184,7 +2749,8 @@ function createlead() {
   var remarks = $("#leadremarks1"); //var subselection = $("input[name='databasefield']:checked").val();
   var radiovalue = $("input[name='dealerselection']:checked").val();
   var dealer = $("#changeproductdealerlist"); //alert(dealer)
-  var leadid = $("#form_recid").val(); //alert(leadid);
+  var leadid = $("#form_recid").val();
+  //alert(leadid);
   var error = $("#errordisplay");
   var contactname = $("#errordisplay");
   var newleadcontactperson = $("#newleadcontactperson");

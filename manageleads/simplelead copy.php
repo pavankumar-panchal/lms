@@ -1621,8 +1621,7 @@ if ($filteredtoexcel == 'yes') {
                                                     <td colspan="3" style="text-align:center;">
                                                       <button name="save" type="button" class="formbutton" id="save"
                                                         onclick="
-                                                          quote_generate(); send_quote(); resetForm(); 
-                                                          generate_pdf();
+                                                          quote_generate(); send_quote(); resetForm(); generate_pdf();
                                                           " style="align-items: center;">Send Quote</button>
 
                                                       <script>

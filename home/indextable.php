@@ -32,54 +32,58 @@
     </td>
   </tr>
 </table>
-<form id="toexcelform" name="toexcelform" action="" method="post" style="width: 50%;"  onclick="toggleOverlay('grid-div-small1');">
-  <div id="tabgroupleadgridc1" style="display: block;" >
- 
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border: 1px solid #308ebc; border-top: none;" >
-     
-  <tr class="headerline">
-        <td width="50%"><span id="gridprocess" style="cursor:pointer;"  onclick="leadgridtab5('3','tabgroupleadgrid','todayfollowup');">&nbsp;SHOW </span></td>
+<form id="toexcelform" name="toexcelform" action="" method="post" style="width: 50%;"
+  onclick="toggleOverlay('grid-div-small1');">
+  <div id="tabgroupleadgridc1" style="display: block;">
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border: 1px solid #308ebc; border-top: none;">
+
+      <tr class="headerline">
+        <td width="50%"><span id="gridprocess" style="cursor:pointer;"
+            onclick="leadgridtab5('3','tabgroupleadgrid','todayfollowup');">&nbsp;SHOW </span></td>
         <td width="50%" align="right" id="gridprocess1"></td>
       </tr>
       <tr>
-     
-      <tr class="" style="display:flex;flex-direction:row;  justify-content:space-around; width:100%; background-color:#b2cffe; width:60rem;">
-      <td nowrap="nowrap" class="tdborderlead" >&nbsp;Sl No</td>
-      <td nowrap="" class="tdborderlead">Lead ID</td>
-      <td nowrap="" class="tdborderlead">Followup ID</td>
-      <td nowrap="" class="tdborderlead">Followup Date</td>
-      <td nowrap="" class="tdborderlead">Remarks</td>
-      <td nowrap="" class="tdborderlead">Next Follow-up</td>
-      <td nowrap="" class="tdborderlead">Enterd by</td>
-    </tr>
-        <td colspan="2">
-          <table width="100%" border="0" cellspacing="0" cellpadding="0" >
-            <tr>
-              <td colspan="3">
-                <div id="tabgroupgridc1" style="overflow: auto; height: 260px; width: 945px;" align="center">
-                  <table width="100%" border="0" cellspacing="0" cellpadding="0" >
-                    <tr>
-                      <td>
-                        <div id="tabgroupgridc1_1" align="center"></div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div id="getmorelink" align="left" style="height: 20px;"></div>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-                <div id="resultgrid" style="overflow: auto; display: none; height: 150px; width: 695px;" align="center">&nbsp;</div>
-              </td>
-            </tr>
-          </table>
-        </td>
+
+      <tr class=""
+        style="display:flex;flex-direction:row;  justify-content:space-around; width:100%; background-color:#b2cffe; width:60rem;">
+        <td nowrap="nowrap" class="tdborderlead">&nbsp;Sl No</td>
+        <td nowrap="" class="tdborderlead">Lead ID</td>
+        <td nowrap="" class="tdborderlead">Followup ID</td>
+        <td nowrap="" class="tdborderlead">Followup Date</td>
+        <td nowrap="" class="tdborderlead">Remarks</td>
+        <td nowrap="" class="tdborderlead">Next Follow-up</td>
+        <td nowrap="" class="tdborderlead">Enterd by</td>
       </tr>
-      
+      <td colspan="2">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td colspan="3">
+              <div id="tabgroupgridc1" style="overflow: auto; height: 260px; width: 945px;" align="center">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td>
+                      <div id="tabgroupgridc1_1" align="center"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div id="getmorelink" align="left" style="height: 20px;"></div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div id="resultgrid" style="overflow: auto; display: none; height: 150px; width: 695px;" align="center">
+                &nbsp;</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+      </tr>
+
     </table>
   </div>
-  
+
 
   <div id="tabgroupleadgridc3" style="display: none;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border: 1px solid #308ebc; border-top: none;">
@@ -107,7 +111,8 @@
                     </tr>
                   </table>
                 </div>
-                <div id="resultgridfup" style="overflow: auto; display: none; height: 150px; width: 695px;" align="center">&nbsp;</div>
+                <div id="resultgridfup" style="overflow: auto; display: none; height: 150px; width: 695px;"
+                  align="center">&nbsp;</div>
               </td>
             </tr>
           </table>
@@ -125,7 +130,7 @@
 <script>
   function toggleOverlay(tableClassName) {
     var overlayContainer = document.getElementById("overlay-container");
-    
+
     // Find the table with the specified class name
     var tableToOverlay = document.querySelector('.' + tableClassName);
 

@@ -1,10 +1,7 @@
 <?php
 
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
 
 include("../inc/checklogin.php");
-//Permission check for the page
 if ($cookie_usertype <> "Admin") {
   header("Location:../home");
 }
@@ -26,11 +23,6 @@ if ($cookie_lastlogindate == "First Time") {
   <script type="text/javascript" src="../functions/highcharts-new.js?dummy=<?php echo (rand()); ?>"></script>
   <script type="text/javascript" src="../functions/excanvas.compiled.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="../css/style.css?dummy=<?php echo (rand()); ?>">
-  <link type="text/css" rel="stylesheet" href="../css/datepickercontrol.css?dummy=<?php echo (rand()); ?>">
-  <script src="../functions/jquery-1.4.2.min.js?dummy=<?php echo (rand()); ?>" language="javascript"></script>
-  <script src="../functions/jsfunctions.js?dummy=<?php echo (rand()); ?>" language="javascript"></script>
-  <script src="../functions/datepickercontrol.js?dummy=<?php echo (rand()); ?>" language="javascript"></script>
   <script src="../functions/indextable.js?dummy=<?php echo (rand()); ?>" language="javascript"></script>
 
 </head>
@@ -169,7 +161,9 @@ if ($cookie_lastlogindate == "First Time") {
                   src="../functions/highchartadmin.js?dummy=<?php echo (rand()); ?>"></script>
               </div>
           <div class="gap" style="margin-top:20px;">
+
               <?php include("indextable.php"); ?>
+
               </div>
               <div id="getmorelinknv1" align="left" style="height: 20px; padding: 5px; margin-top: 10px;">
               </div>
