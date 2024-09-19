@@ -3,8 +3,21 @@ include("./functions/phpfunctions.php");
 
 if($_POST['send'])
 {
-	$username = $_POST['username'];
-	$email = $_POST['email'];
+
+
+  $username = stripslashes($_POST['username']);
+  $email = stripslashes($_POST['email']);
+  
+  // Prevent SQL injection
+  $username = mysqli_real_escape_string($newconnection, $username);
+  $email = mysqli_real_escape_string($newconnection, $email);
+
+
+	// $username = $_POST['username'];
+	// $email = $_POST['email'];
+
+
+
 	$message = "";
 	
 	if($username == "" or $email == "")

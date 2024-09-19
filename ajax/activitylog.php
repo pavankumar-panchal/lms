@@ -4,22 +4,68 @@ include("../inc/ajax-referer-security.php");
 include("../functions/phpfunctions.php");
 include("../inc/getuserslno.php");
 
-$switchtype = $_POST['switchtype'];
+$switchtype = stripslashes($_POST['switchtype']);
+$switchtype = mysqli_real_escape_string($conn, $switchtype);
+
+
+// $switchtype = $_POST['switchtype'];
 
 switch($switchtype)
 {
 	case 'searchactivity':
 	{
-		$startlimit = $_POST['startlimit'];
-		$slnocount = $_POST['slnocount'];
-		$showtype = $_POST['showtype'];
+
+		$startlimit = stripslashes($_POST['startlimit']);
+		$startlimit = mysqli_real_escape_string($conn, $startlimit);
+		
+		$slnocount = stripslashes($_POST['slnocount']);
+		$slnocount = mysqli_real_escape_string($conn, $slnocount);
+		
+		$showtype = stripslashes($_POST['showtype']);
+		$showtype = mysqli_real_escape_string($conn, $showtype);
+		
+		// $fromdate = stripslashes(changedateformat($_POST['fromdate']));
+		// $fromdate = mysqli_real_escape_string($conn, $fromdate);
+		
+		// $todate = stripslashes(changedateformat($_POST['todate']));
+		// $todate = mysqli_real_escape_string($conn, $todate);
+		
+		$databasefield = stripslashes($_POST['databasefield']);
+		$databasefield = mysqli_real_escape_string($conn, $databasefield);
+		
+		$textfield = stripslashes($_POST['textfield']);
+		$textfield = mysqli_real_escape_string($conn, $textfield);
+		
+		$eventtype = stripslashes($_POST['eventtype']);
+		$eventtype = mysqli_real_escape_string($conn, $eventtype);
+		
+		$generatedby = stripslashes($_POST['username']);
+		$generatedby = mysqli_real_escape_string($conn, $generatedby);
+		
+
+
+
+
+
+
+
+
+
+		// $startlimit = $_POST['startlimit'];
+		// $slnocount = $_POST['slnocount'];
+		// $showtype = $_POST['showtype'];
+
+
 		$fromdate = changedateformat($_POST['fromdate']);
 		$todate = changedateformat($_POST['todate']);
 		
-		$databasefield = $_POST['databasefield'];
-		$textfield = $_POST['textfield'];
-		$eventtype = $_POST['eventtype'];
-		$generatedby = $_POST['username'];
+		// $databasefield = $_POST['databasefield'];
+		// $textfield = $_POST['textfield'];
+		// $eventtype = $_POST['eventtype'];
+		// $generatedby = $_POST['username'];
+
+
+
 		$generatedbysplit = explode('^',$generatedby);
 		if($generatedbysplit[1] == "[S]")
 			$generatedbypiece1 = 'Sub Admin';
@@ -168,9 +214,20 @@ where (left(lms_logs_event.eventdatetime,10) between '".$fromdate."' AND '".$tod
 	
 	case 'griddata':
 	{
-		$startlimit = $_POST['startlimit'];
-		$slnocount = $_POST['slnocount'];
-		$showtype = $_POST['showtype'];
+
+		$startlimit = stripslashes($_POST['startlimit']);
+		$startlimit = mysqli_real_escape_string($conn, $startlimit);
+		
+		$slnocount = stripslashes($_POST['slnocount']);
+		$slnocount = mysqli_real_escape_string($conn, $slnocount);
+		
+		$showtype = stripslashes($_POST['showtype']);
+		$showtype = mysqli_real_escape_string($conn, $showtype);
+		
+
+		// $startlimit = $_POST['startlimit'];
+		// $slnocount = $_POST['slnocount'];
+		// $showtype = $_POST['showtype'];
 		
 		
 		$resultcount = "select  count(lms_logs_event.slno) as count
