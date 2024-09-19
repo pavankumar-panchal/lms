@@ -1,5 +1,8 @@
 <?php
-error_reporting(1);
+// sesion_start();
+// error_reporting(1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
 
 if (file_exists("../inc/dbconfig.php")) {
 	include("../inc/dbconfig.php");
@@ -8,19 +11,13 @@ if (file_exists("../inc/dbconfig.php")) {
 
 }
 
+//Connect to host
+$newconnection = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname) or die("Cannot connect to Mysql server host");
 
-// Connect to host (Primary database)
-$newconnection = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
-if (!$newconnection) {
-	die("Cannot connect to MySQL server host: " . mysqli_connect_error());
-}
+//Connect to log host
+$newconnection_log = mysqli_connect($dbhost_log, $dbuser_log, $dbpwd_log, $dbname_log) or die("Cannot connect to Mysql server host");
 
-// Connect to log host (Log database)
-$newconnection_log = mysqli_connect($dbhost_log, $dbuser_log, $dbpwd, $dbname_log);
-if (!$newconnection_log) {
-	die("Cannot connect to MySQL log server host: " . mysqli_connect_error());
-}
-
+/* -------------------- Get local server time [by adding 5.30 hours] -------------------- */
 function datetimelocal($format)
 {
 	$diff_timestamp = date('U');
@@ -66,54 +63,20 @@ function downloadfile($filelink)
 }
 
 /* -------------------- Run a query to database -------------------- */
-// function runmysqlquery($query)
-// {
-// 	global $newconnection;
-// 	$dbname = 'relyon_lms';
-
-// 	//Connect to Database
-// 	mysqli_select_db($newconnection, $dbname) or die("Cannot connect to database");
-// 	set_time_limit(3600);
-// 	//Run the query
-// 	$result = mysqli_query($newconnection, $query) or die(" run Query Failed in Runquery function1." . $query); //;
-
-// 	//Return the result
-// 	return $result;
-// }
-
-
-function runmysqlquery($query, $param_types = '', ...$params)
+function runmysqlquery($query)
 {
 	global $newconnection;
 	$dbname = 'relyon_lms';
 
-	// Connect to the database
+	//Connect to Database
 	mysqli_select_db($newconnection, $dbname) or die("Cannot connect to database");
-	// Prepare the query
+	set_time_limit(3600);
+	//Run the query
+	$result = mysqli_query($newconnection, $query) or die(" run Query Failed in Runquery function1." . $query); //;
 
-	$stmt = mysqli_prepare($newconnection, $query);
-	if ($stmt === false) {
-		die("MySQLi prepare error: " . mysqli_error($newconnection));
-	}
-
-	// Bind parameters if there are any
-	if (!empty($param_types)) {
-		mysqli_stmt_bind_param($stmt, $param_types, ...$params);
-	}
-
-	// Execute the query
-	mysqli_stmt_execute($stmt) or die("Query execution failed: " . mysqli_error($newconnection));
-
-	// Get the result if it's a SELECT query
-	$result = mysqli_stmt_get_result($stmt);
-
-	// Close the statement
-	mysqli_stmt_close($stmt);
-
-	// Return the result for SELECT queries or true/false for other queries
-	return $result ? $result : true;
+	//Return the result
+	return $result;
 }
-
 
 
 
@@ -135,66 +98,23 @@ function runmysqlquery_log($query)
 
 
 /* -------------------- Run a query to database with fetching from SELECT operation -------------------- */
-
-function runmysqlqueryfetch($query, $param_types = '', ...$params)
+function runmysqlqueryfetch($query)
 {
 	global $newconnection;
+	$dbname = 'relyon_lms';
 
-	// Prepare the query
-	$stmt = mysqli_prepare($newconnection, $query);
-	if ($stmt === false) {
-		die("MySQLi prepare error: " . mysqli_error($newconnection));
-	}
+	//Connect to Database
+	mysqli_select_db($newconnection, $dbname) or die("Cannot connect to database");
+	set_time_limit(3600);
+	//Run the query
+	$result = mysqli_query($newconnection, $query) or die(" run Query Failed in Runquery function1." . $query); //;
 
-	// Bind parameters if provided
-	if (!empty($param_types)) {
-		mysqli_stmt_bind_param($stmt, $param_types, ...$params);
-	}
+	//Fetch the Query to an array
+	$fetchresult = mysqli_fetch_array($result) or die("Cannot fetch the query result." . $query);
 
-	// Execute the query
-	if (!mysqli_stmt_execute($stmt)) {
-		die("Query execution failed: " . mysqli_error($newconnection));
-	}
-
-	// Get the result
-	$result = mysqli_stmt_get_result($stmt);
-	if ($result === false) {
-		die("Failed to get result: " . mysqli_error($newconnection));
-	}
-
-	// Fetch the query result as an associative array
-	$fetchresult = mysqli_fetch_assoc($result);
-	if ($fetchresult === false) {
-		die("Cannot fetch the query result.");
-	}
-
-	// Close the statement
-	mysqli_stmt_close($stmt);
-
-	// Return the result
+	//Return the result
 	return $fetchresult;
 }
-
-
-
-
-// function runmysqlqueryfetch($query)
-// {
-// 	global $newconnection;
-// 	$dbname = 'relyon_lms';
-
-// 	//Connect to Database
-// 	mysqli_select_db($newconnection, $dbname) or die("Cannot connect to database");
-// 	set_time_limit(3600);
-// 	//Run the query
-// 	$result = mysqli_query($newconnection, $query) or die(" run Query Failed in Runquery function1." . $query); //;
-
-// 	//Fetch the Query to an array
-// 	$fetchresult = mysqli_fetch_array($result) or die("Cannot fetch the query result." . $query);
-
-// 	//Return the result
-// 	return $fetchresult;
-// }
 
 
 
@@ -383,9 +303,28 @@ function sendsms($servicename, $tonumber, $smstext, $senddate, $sendtime)
 	if (validatecellno($tonumber) == false)
 		return false;
 	else {
+		/*$senddate = datetimelocal("Y-m-d");
+																																				  $sendtime = datetimelocal("H:i");
+																																				  
+																																				  $accountid = "20010262";
+																																				  $accountpassword = "fcmy7q";
+																																				  $tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10);
+																																				  $smstext = substr($smstext, 0, 159);
+																																			  
+																																				  $targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?";
+																																				  $targeturl .= "user=".$accountid;
+																																				  $targeturl .= "&pwd=".$accountpassword;
+																																				  $targeturl .= "&senderid=RELYON";
+																																				  $targeturl .= "&mobileno=".$tonumber;
+																																				  $targeturl .= "&msgtext=".urlencode($smstext);
+																																				  $targeturl .= "&priority=High";
+																																			  
+																																				  $response = file_get_contents($targeturl);
+																																				  $splitdata = explode(",",$response);
+																																				  $messageid = $splitdata[0];
+																																				  $message = "Sent Successfully. [Message ID = ".$messageid."]";*/
 
-		/*$senddate = datetimelocal("Y-m-d"); $sendtime = datetimelocal("H:i"); $accountid = "20010262"; $accountpassword = "fcmy7q"; $tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10); $smstext = substr($smstext, 0, 159); $targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?"; $targeturl .= "user=".$accountid; $targeturl .= "&pwd=".$accountpassword; $targeturl .= "&senderid=RELYON"; $targeturl .= "&mobileno=".$tonumber; $targeturl .= "&msgtext=".urlencode($smstext); $targeturl .= "&priority=High"; $response = file_get_contents($targeturl); $splitdata = explode(",",$response); $messageid = $splitdata[0]; $message = "Sent Successfully. [Message ID = ".$messageid."]";*/ //Insert to SMS Logs Database
-
+		//Insert to SMS Logs Database
 		$query = "insert into `smslogs`(servicename, tonumber, smstext, senddate, sendtime)values('" . $servicename . "', '" . $tonumber . "', '" . $smstext . "', '" . $senddate . "', '" . $sendtime . "')";
 		$result = runmysqlquery($query);
 		return true;
@@ -400,7 +339,37 @@ function sendsmsforleads($servicename, $tonumber, $smstext, $senddate, $sendtime
 	if (validatecellno($tonumber) == false) {
 		return true;
 	} else {
-		/*$senddate = datetimelocal("Y-m-d"); $sendtime = datetimelocal("H:i"); $accountid = "20010262"; $accountpassword = "fcmy7q"; $tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10); $smstext = substr($smstext, 0, 159); $targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?"; $targeturl .= "user=".$accountid; $targeturl .= "&pwd=".$accountpassword; $targeturl .= "&senderid=RELYON"; $targeturl .= "&mobileno=".$tonumber; $targeturl .= "&msgtext=".urlencode($smstext); $targeturl .= "&priority=High"; $response = file_get_contents($targeturl); $splitdata = explode(",",$response); $messageid = $splitdata[0]; $message = "Sent Successfully. [Message ID = ".$messageid."]";*/ /* $file = $_SERVER['DOCUMENT_ROOT'].'/LMS/filescreated/'.'SMS.txt'; $current = stripslashes($smstext)."\r\n"; $fp = fopen($file,'a+'); if($fp) fwrite($fp,$current); fclose($fp); //echo('here');exit;*/ //Insert to SMS Logs Database
+		/*$senddate = datetimelocal("Y-m-d");
+																																				  $sendtime = datetimelocal("H:i");
+																																				  
+																																				  $accountid = "20010262";
+																																				  $accountpassword = "fcmy7q";
+																																				  $tonumber = (strlen($tonumber) == 10)?$tonumber:substr($tonumber, -10);
+																																				  $smstext = substr($smstext, 0, 159);
+																																			  
+																																				  $targeturl = "http://www.mysmsmantra.co.in/sendurl.asp?";
+																																				  $targeturl .= "user=".$accountid;
+																																				  $targeturl .= "&pwd=".$accountpassword;
+																																				  $targeturl .= "&senderid=RELYON";
+																																				  $targeturl .= "&mobileno=".$tonumber;
+																																				  $targeturl .= "&msgtext=".urlencode($smstext);
+																																				  $targeturl .= "&priority=High";
+																																			  
+																																				  $response = file_get_contents($targeturl);
+																																				  $splitdata = explode(",",$response);
+																																				  $messageid = $splitdata[0];
+																																				  $message = "Sent Successfully. [Message ID = ".$messageid."]";*/
+
+
+		/*	$file = $_SERVER['DOCUMENT_ROOT'].'/LMS/filescreated/'.'SMS.txt';
+																																				   $current = stripslashes($smstext)."\r\n";
+																																				   $fp = fopen($file,'a+');
+																																				   if($fp)
+																																					   fwrite($fp,$current);
+																																				   fclose($fp);
+																																				   
+																																				   //echo('here');exit;*/
+		//Insert to SMS Logs Database
 		$query = "insert into `smslogs`(servicename, tonumber, smstext, senddate, sendtime,leadid,smssentby)values('" . $servicename . "', '" . $tonumber . "', '" . addslashes($smstext) . "', '" . $senddate . "', '" . $sendtime . "','" . $leadid . "','" . $sentby . "')";
 		$result = runmysqlquery($query);
 		return true;
