@@ -41,9 +41,23 @@ if ($isloggedin == 'true') {
 }
 
 if (isset($_POST['login'])) {
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-  $loggintype = $_POST['loggintype'];
+
+
+  // $username = $_POST['username'];
+  // $password = $_POST['password'];
+  // $loggintype = $_POST['loggintype'];
+
+
+  $username = stripslashes($_POST['username']);
+  $password = stripslashes($_POST['password']);
+  $loggintype = stripslashes($_POST['loggintype']);
+
+  // Prevent SQL injection
+  $username = mysqli_real_escape_string($newconnection, $username);
+  $password = mysqli_real_escape_string($newconnection, $password);
+  $loggintype = mysqli_real_escape_string($newconnection, $loggintype);
+
+
   $message = "";
 
   // Check if username and password are empty
@@ -160,7 +174,8 @@ if (isset($_POST['login'])) {
 
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
