@@ -1199,6 +1199,8 @@ function getmorerecords(startlimit, slnocount, showtype, type) {
   }
 }
 
+
+
 function send_quote() {
   var contactperson = $("#contactperson").val();
   var address = $("#address").val();
@@ -1266,6 +1268,9 @@ function send_quote() {
   });
   // reset the product form
 }
+
+
+
 
 function convertToSingleWord(value) {
   return value.replace(/\s+/g, ""); // Remove all white spaces
