@@ -8,7 +8,7 @@ if (file_exists("../inc/dbconfig.php")) {
 
 }
 
-
+// //
 // Connect to host (Primary database)
 $newconnection = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
 if (!$newconnection) {
